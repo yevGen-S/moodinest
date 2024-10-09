@@ -1,11 +1,11 @@
 {
     "expo": {
-        "name": "moodinest",
+        "name": "MoodiNest",
         "slug": "moodinest",
+        "scheme": "moodinest",
+        "icon": "",
         "version": "1.0.0",
         "orientation": "portrait",
-        "icon": "",
-        "scheme": "myapp",
         "userInterfaceStyle": "automatic",
         "splash": {
             "image": "",
