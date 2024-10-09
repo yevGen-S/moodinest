@@ -1,8 +1,9 @@
 import { Link, SplashScreen } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
+import icons from '@/constants/icons';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,7 +23,13 @@ export default function App() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>MoodiNest</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Image
+                    source={icons.logo}
+                    style={styles.logo}
+                />
+                <Text style={styles.title}>MoodiNest</Text>
+            </View>
             <Text style={styles.subtitle}>Трекер настроения</Text>
             <Link href={'/main'}>Перейти в приложение</Link>
             <StatusBar
@@ -39,9 +46,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    logo: {
+        width: 60,
+        height: 60,
+        resizeMode: 'contain',
+        borderRadius: 50,
+    },
     title: {
         fontFamily: 'Work-Sans',
-        fontSize: 24,
+        flexDirection: 'row',
+        fontSize: 50,
         fontWeight: 'bold',
     },
     subtitle: {

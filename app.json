@@ -3,12 +3,12 @@
         "name": "MoodiNest",
         "slug": "moodinest",
         "scheme": "moodinest",
-        "icon": "",
+        "icon": "./assets/icons/logo.png",
         "version": "1.0.0",
         "orientation": "portrait",
         "userInterfaceStyle": "automatic",
         "splash": {
-            "image": "",
+            "image": "./assets/icons/logo.png",
             "resizeMode": "contain",
             "backgroundColor": "#ffffff"
         },
@@ -17,7 +17,7 @@
         },
         "android": {
             "adaptiveIcon": {
-                "foregroundImage": "",
+                "foregroundImage": "./assets/icons/logo.png",
                 "backgroundColor": "#ffffff"
             },
             "package": "com.itmo.moodinest"
@@ -25,7 +25,7 @@
         "web": {
             "bundler": "metro",
             "output": "static",
-            "favicon": ""
+            "favicon": "./assets/icons/logo.png"
         },
         "plugins": ["expo-router", "expo-asset", "expo-font"],
         "experiments": {
