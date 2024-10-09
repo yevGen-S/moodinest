@@ -1,9 +1,11 @@
+import { Link } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function App() {
     return (
         <View style={styles.container}>
             <Text>MoodiNest</Text>
+            <Link href={'/main'}>Go home</Link>
         </View>
     );
 }
