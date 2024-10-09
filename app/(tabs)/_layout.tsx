@@ -15,7 +15,6 @@ const TabIcon = ({ icon, color, name }: TabIconProps) => {
         <View
             style={{
                 display: 'flex',
-                justifyContent: 'center',
                 alignItems: 'center',
             }}
         >
@@ -24,11 +23,22 @@ const TabIcon = ({ icon, color, name }: TabIconProps) => {
                 resizeMode="contain"
                 tintColor={color}
                 style={{
-                    width: 20,
-                    height: 20,
+                    width: 28,
+                    height: 28,
+                    marginBottom: 5,
                 }}
             />
-            <Text>{name}</Text>
+            <Text
+                style={{
+                    fontFamily: 'Work Sans',
+                    fontSize: 12,
+                    fontWeight: 500,
+                    lineHeight: 16,
+                    textAlign: 'center',
+                }}
+            >
+                {name}
+            </Text>
         </View>
     );
 };
@@ -39,6 +49,9 @@ const TabsLayout = () => {
             screenOptions={{
                 tabBarShowLabel: false,
                 tabBarActiveTintColor: '#000000',
+                tabBarStyle: {
+                    height: 104,
+                },
             }}
         >
             <Tabs.Screen
