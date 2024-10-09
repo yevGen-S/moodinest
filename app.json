@@ -1,41 +1,44 @@
 {
-    "expo": {
-        "name": "MoodiNest",
-        "slug": "moodinest",
-        "scheme": "moodinest",
-        "icon": "",
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "userInterfaceStyle": "automatic",
-        "splash": {
-            "image": "",
-            "resizeMode": "contain",
-            "backgroundColor": "#ffffff"
-        },
-        "ios": {
-            "supportsTablet": true
-        },
-        "android": {
-            "adaptiveIcon": {
-                "foregroundImage": "",
-                "backgroundColor": "#ffffff"
-            },
-            "package": "com.itmo.moodinest"
-        },
-        "web": {
-            "bundler": "metro",
-            "output": "static",
-            "favicon": ""
-        },
-        "plugins": ["expo-router"],
-        "experiments": {
-            "typedRoutes": true
-        },
-        "extra": {
-            "eas": {
-                "projectId": "5abf1931-db7f-4fd1-92d0-8fd4480e27ca"
-            }
-        },
-        "owner": "yevs"
-    }
+  "expo": {
+    "name": "MoodiNest",
+    "slug": "moodinest",
+    "scheme": "moodinest",
+    "icon": "",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.itmo.moodinest"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": ""
+    },
+    "plugins": [
+      "expo-router",
+      "expo-asset"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5abf1931-db7f-4fd1-92d0-8fd4480e27ca"
+      }
+    },
+    "owner": "yevs"
+  }
 }
