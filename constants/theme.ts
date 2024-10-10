@@ -6,4 +6,8 @@ export const generalStyles = StyleSheet.create({
         height: '100%',
         paddingTop: 20,
     },
+    font: {
+        fontFamily: 'Work-Sans',
+        fontSize: 18,
+    },
 });
