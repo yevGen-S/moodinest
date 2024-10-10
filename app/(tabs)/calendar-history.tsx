@@ -1,11 +1,13 @@
-import { View, Text } from 'react-native';
+import { Text } from 'react-native';
 import React from 'react';
+import { generalStyles } from '@/constants/theme';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CalendarHistory = () => {
     return (
-        <View>
+        <SafeAreaView style={generalStyles.container}>
             <Text>CalendarHistory</Text>
-        </View>
+        </SafeAreaView>
     );
 };
 

@@ -1,9 +1,16 @@
 import { Link, SplashScreen } from 'expo-router';
-import { Image, StyleSheet, Text, View } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import {
+    Image,
+    StyleSheet,
+    Text,
+    TouchableHighlight,
+    View,
+} from 'react-native';
 import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
 import icons from '@/constants/icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { generalStyles } from '@/constants/theme';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,21 +29,23 @@ export default function App() {
     }
 
     return (
-        <View style={styles.container}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.logoView}>
                 <Image
                     source={icons.logo}
                     style={styles.logo}
                 />
                 <Text style={styles.title}>MoodiNest</Text>
             </View>
-            <Text style={styles.subtitle}>Трекер настроения</Text>
-            <Link href={'/main'}>Перейти в приложение</Link>
-            <StatusBar
-                style="light"
-                animated
-            />
-        </View>
+            <TouchableHighlight style={styles.navButton}>
+                <Link
+                    href={'/main'}
+                    style={styles.link}
+                >
+                    Перейти в приложение
+                </Link>
+            </TouchableHighlight>
+        </SafeAreaView>
     );
 }
 
@@ -45,21 +54,36 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        gap: 10,
+    },
+    logoView: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 100,
     },
     logo: {
-        width: 60,
-        height: 60,
+        width: 50,
+        height: 50,
         resizeMode: 'contain',
-        borderRadius: 50,
+        borderRadius: 100,
     },
     title: {
         fontFamily: 'Work-Sans',
         flexDirection: 'row',
         fontSize: 50,
-        fontWeight: 'bold',
     },
-    subtitle: {
-        fontFamily: 'Work-Sans',
-        fontSize: 18,
+    navButton: {
+        backgroundColor: '#000000',
+        width: '80%',
+        height: 50,
+        borderRadius: 10,
+    },
+    link: {
+        ...generalStyles.font,
+        color: '#FFFFFF',
+        width: '100%',
+        height: '100%',
+        textAlign: 'center',
+        textAlignVertical: 'center',
     },
 });
