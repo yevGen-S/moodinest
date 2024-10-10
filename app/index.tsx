@@ -10,6 +10,7 @@ import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
 import icons from '@/constants/icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { generalStyles } from '@/constants/theme';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -72,14 +73,14 @@ const styles = StyleSheet.create({
         fontSize: 50,
     },
     navButton: {
-        backgroundColor: '#AFB1B6',
+        backgroundColor: '#000000',
         width: '80%',
         height: 50,
         borderRadius: 10,
     },
     link: {
-        fontFamily: 'Work-Sans',
-        fontSize: 18,
+        ...generalStyles.font,
+        color: '#FFFFFF',
         width: '100%',
         height: '100%',
         textAlign: 'center',
