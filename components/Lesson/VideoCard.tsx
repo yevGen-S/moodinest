@@ -16,8 +16,8 @@ type VideoCardProps = {
     setPlay: (value: boolean) => void;
     uri?: string;
     thubnail?: ImageURISource;
-    duration: number;
-    isFavorite: boolean;
+    duration?: number;
+    isFavourite?: boolean;
 };
 
 const VideoCard = ({
@@ -25,7 +25,7 @@ const VideoCard = ({
     onPress,
     thubnail,
     duration,
-    isFavorite,
+    isFavourite = false,
 }: VideoCardProps) => {
     return (
         <>
@@ -62,11 +62,11 @@ const VideoCard = ({
                     <TouchableOpacity style={styles.bookmarkView}>
                         <Image
                             style={
-                                isFavorite
+                                isFavourite
                                     ? styles.bookmarkIcon
                                     : styles.bookmarkIcon
                             }
-                            tintColor={isFavorite ? 'yellow' : '#FFFFFF'}
+                            tintColor={isFavourite ? 'yellow' : '#FFFFFF'}
                             source={icons.bookmark}
                             resizeMode="contain"
                         />

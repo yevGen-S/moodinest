@@ -8,7 +8,7 @@ type LessonProps = {
     thubnail?: ImageURISource;
     name: string;
     description?: string;
-    isFavourite?: string;
+    isFavourite?: boolean;
     duration?: number;
 };
 
@@ -30,6 +30,7 @@ const Lesson = ({
                 onPress={() => setPlay(true)}
                 setPlay={setPlay}
                 duration={duration}
+                isFavourite={isFavourite}
             />
             <View style={{ alignSelf: 'flex-start' }}>
                 <Text style={styles.title}>{name}</Text>
