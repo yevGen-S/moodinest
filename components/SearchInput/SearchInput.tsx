@@ -64,12 +64,12 @@ const styles = StyleSheet.create({
     search: {
         flex: 1,
         flexDirection: 'row-reverse',
-        justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 20,
-        padding: 5,
+        paddingLeft: 60,
         backgroundColor: '#EFEFF0',
         height: 44,
+        gap: 10,
     },
     input: {
         flex: 1,

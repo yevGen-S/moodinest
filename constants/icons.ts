@@ -3,6 +3,8 @@ import main from '../assets/icons/home.png';
 import activity from '../assets/icons/activity.png';
 import discovery from '../assets/icons/discovery.png';
 import logo from '../assets/icons/logo.png';
+import search from '../assets/icons/search.png';
+import filter from '../assets/icons/filter.png';
 
 export default {
     profile,
@@ -10,4 +12,6 @@ export default {
     activity,
     discovery,
     logo,
+    search,
+    filter,
 };

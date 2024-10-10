@@ -11,7 +11,7 @@ const Lessons = () => {
             <View style={styles.searchRow}>
                 <SearchInput
                     value={search}
-                    placeHolder={''}
+                    placeHolder={'Введите название'}
                     onChangeText={setSearch}
                     onSubmit={() => {}}
                 />
