@@ -1,27 +1,19 @@
-import {
-    Image,
-    ImageURISource,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+import { ImageURISource, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
-import SearchInput from '../SearchInput/SearchInput';
-import icons from '@/constants/icons';
 import { generalStyles } from '@/constants/theme';
+import VideoCard from './VideoCard';
 
 type LessonProps = {
-    video?: string;
+    uri?: string;
     thubnail?: ImageURISource;
     name: string;
     description?: string;
     isFavourite?: string;
-    duration?: string;
+    duration?: number;
 };
 
 const Lesson = ({
-    video,
+    uri,
     thubnail,
     name,
     description,
@@ -29,27 +21,16 @@ const Lesson = ({
     duration,
 }: LessonProps) => {
     const [play, setPlay] = useState(false);
-
     return (
         <View style={styles.container}>
-            {play ? (
-                <Text>Playing</Text>
-            ) : (
-                <TouchableOpacity style={styles.videoArea}>
-                    {thubnail && (
-                        <Image
-                            source={thubnail}
-                            style={styles.thubnail}
-                            resizeMode="cover"
-                        />
-                    )}
-                    <Image
-                        style={styles.playIcon}
-                        source={icons.play}
-                        resizeMode="contain"
-                    />
-                </TouchableOpacity>
-            )}
+            <VideoCard
+                uri={uri}
+                thubnail={thubnail}
+                play={play}
+                onPress={() => setPlay(true)}
+                setPlay={setPlay}
+                duration={duration}
+            />
             <View style={{ alignSelf: 'flex-start' }}>
                 <Text style={styles.title}>{name}</Text>
                 <Text style={styles.description}>{description}</Text>
@@ -72,26 +53,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 8,
-    },
-    thubnail: {
-        width: '100%',
-        height: '100%',
-    },
-    videoArea: {
-        backgroundColor: '#EFEFF0',
-        width: '100%',
-        height: 200,
-        borderWidth: 2,
-        borderColor: '#AFB1B6',
-        borderRadius: 8,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    playIcon: {
-        width: 24,
-        height: 24,
-        position: 'absolute',
     },
     title: {
         ...generalStyles.font,

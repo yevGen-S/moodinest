@@ -6,6 +6,18 @@ import { generalStyles } from '@/constants/theme';
 import EmptyState from '@/components/EmptyState/EmptyState';
 import Lesson from '@/components/Lesson/Lesson';
 
+const mockData = [
+    {
+        id: 1,
+        name: 'Lesson 1',
+        description: 'Nice lesson',
+        uri: 'https://www.youtube.com/watch?v=tvea5xhG48w',
+        duration: 5,
+    },
+    { id: 2, name: 'Lesson 2', description: 'Nice lesson' },
+    { id: 3, name: 'Lesson 3', description: 'Nice lesson' },
+];
+
 const Lessons = () => {
     const [search, setSearch] = useState('');
     return (
@@ -26,17 +38,8 @@ const Lessons = () => {
                 }}
             />
             <FlatList
-                data={[
-                    { id: 1, name: 'Lesson 1', description: 'Nice lesson' },
-                    { id: 2, name: 'Lesson 2', description: 'Nice lesson' },
-                    { id: 3, name: 'Lesson 3', description: 'Nice lesson' },
-                ]}
-                renderItem={({ item }) => (
-                    <Lesson
-                        name={item.name}
-                        description={item.description}
-                    />
-                )}
+                data={mockData}
+                renderItem={({ item }) => <Lesson {...item} />}
                 ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
                 ListEmptyComponent={() => (
                     <EmptyState title="Уроки не найдены..." />
