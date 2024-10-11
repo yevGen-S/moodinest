@@ -1,25 +1,25 @@
 import {
     StyleSheet,
     Text,
-    TouchableHighlight,
-    TouchableHighlightProps,
-    View,
+    TouchableOpacity,
+    TouchableOpacityProps,
 } from 'react-native';
 import React from 'react';
 import { generalStyles } from '@/constants/theme';
 
 export type CustomButtonProps = {
     showText: string;
-} & TouchableHighlightProps;
+} & TouchableOpacityProps;
 
 const CustomButton = ({ showText, ...props }: CustomButtonProps) => {
     return (
-        <TouchableHighlight
+        <TouchableOpacity
             {...props}
             style={styles.btn}
+            activeOpacity={0.8}
         >
             <Text style={styles.btnText}>{showText}</Text>
-        </TouchableHighlight>
+        </TouchableOpacity>
     );
 };
 
