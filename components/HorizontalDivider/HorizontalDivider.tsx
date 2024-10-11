@@ -10,7 +10,8 @@ export default HorizontalDivider;
 const styles = StyleSheet.create({
     divider: {
         borderBottomColor: '#EFEFF0',
-        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomWidth: 1,
         marginBottom: 20,
+        width: '100%',
     },
 });
