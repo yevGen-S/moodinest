@@ -28,7 +28,7 @@ export default CustomButton;
 const styles = StyleSheet.create({
     btn: {
         backgroundColor: '#000000',
-        width: '85%',
+        width: '90%',
         height: 48,
         borderRadius: 24,
     },
