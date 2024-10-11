@@ -1,16 +1,10 @@
-import { Link, SplashScreen } from 'expo-router';
-import {
-    Image,
-    StyleSheet,
-    Text,
-    TouchableHighlight,
-    View,
-} from 'react-native';
+import { router, SplashScreen, useNavigation } from 'expo-router';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
 import icons from '@/constants/icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { generalStyles } from '@/constants/theme';
+import CustomButton from '@/components/CustomButton/CustomButton';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -37,14 +31,10 @@ export default function App() {
                 />
                 <Text style={styles.title}>MoodiNest</Text>
             </View>
-            <TouchableHighlight style={styles.navButton}>
-                <Link
-                    href={'/main'}
-                    style={styles.link}
-                >
-                    Перейти в приложение
-                </Link>
-            </TouchableHighlight>
+            <CustomButton
+                showText="Перейти в приложение"
+                onPress={() => router.navigate('/main')}
+            />
         </SafeAreaView>
     );
 }
@@ -71,19 +61,5 @@ const styles = StyleSheet.create({
         fontFamily: 'Work-Sans',
         flexDirection: 'row',
         fontSize: 50,
-    },
-    navButton: {
-        backgroundColor: '#000000',
-        width: '80%',
-        height: 50,
-        borderRadius: 10,
-    },
-    link: {
-        ...generalStyles.font,
-        color: '#FFFFFF',
-        width: '100%',
-        height: '100%',
-        textAlign: 'center',
-        textAlignVertical: 'center',
     },
 });
