@@ -5,13 +5,14 @@ import SearchInput from '@/components/SearchInput/SearchInput';
 import { generalStyles } from '@/constants/theme';
 import EmptyState from '@/components/EmptyState/EmptyState';
 import Lesson from '@/components/Lesson/Lesson';
+import HorizontalDivider from '@/components/HorizontalDivider/HorizontalDivider';
 
 const mockData = [
     {
         id: 1,
         name: 'Lesson 1',
         description: 'Nice lesson',
-        uri: 'https://www.youtube.com/watch?v=tvea5xhG48w',
+        uri: 'https://www.youtube.com/watch?v=jfKfPfyJRdk&ab_channel=LofiGirl',
         duration: 5,
     },
     { id: 2, name: 'Lesson 2', description: 'Nice lesson' },
@@ -30,13 +31,7 @@ const Lessons = () => {
                     onSubmit={() => {}}
                 />
             </View>
-            <View
-                style={{
-                    borderBottomColor: '#EFEFF0',
-                    borderBottomWidth: StyleSheet.hairlineWidth,
-                    marginBottom: 20,
-                }}
-            />
+            <HorizontalDivider />
             <FlatList
                 data={mockData}
                 renderItem={({ item }) => <Lesson {...item} />}
@@ -51,11 +46,6 @@ const Lessons = () => {
 };
 
 const styles = StyleSheet.create({
-    video: {
-        fontFamily: 'Work-Sans',
-        fontWeight: 'bold',
-        fontSize: 100,
-    },
     searchRow: {
         justifyContent: 'center',
         flexDirection: 'row',
