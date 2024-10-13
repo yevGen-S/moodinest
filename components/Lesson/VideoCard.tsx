@@ -6,10 +6,11 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import icons from '@/constants/icons';
 import { StatusBar } from 'expo-status-bar';
 import { Video, ResizeMode } from 'expo-av';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 type VideoCardProps = {
     play: boolean;
@@ -30,19 +31,48 @@ const VideoCard = ({
     isFavourite = false,
     videoURL,
 }: VideoCardProps) => {
-    const video = useRef(null);
+    const videoRef = useRef<Video | null>(null);
+
+    const [currentResizeMode, setCurrentResizeMode] = useState<ResizeMode.COVER | ResizeMode.CONTAIN>(ResizeMode.COVER);
+
+    const handleOrientationChange = async () => {
+      const orientation = await ScreenOrientation.getOrientationAsync();
+
+      if(orientation === ScreenOrientation.Orientation.PORTRAIT_UP) {
+        setCurrentResizeMode(ResizeMode.CONTAIN);
+      } else {
+        setCurrentResizeMode(ResizeMode.COVER);
+      }
+    };
+  
+    useEffect(() => {
+      const lockOrientation = async () => {
+        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.DEFAULT);
+      };
+  
+      lockOrientation();
+  
+      const subscription = ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
+  
+      handleOrientationChange();
+  
+      return () => {
+        subscription.remove();
+      };
+    }, []);
+
     return (
         <>
             {play ? (
                 <>
                     <Video
-                        ref={video}
+                        ref={videoRef}
                         style={styles.videoArea}
                         source={{
                            uri: videoURL
                         }}
                         useNativeControls
-                        resizeMode={ResizeMode.CONTAIN}
+                        resizeMode={currentResizeMode}
                     />
                     <StatusBar style="auto" />
                 </>

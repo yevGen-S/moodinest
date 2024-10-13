@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchInput from '@/components/SearchInput/SearchInput';
@@ -7,18 +7,6 @@ import EmptyState from '@/components/EmptyState/EmptyState';
 import Lesson from '@/components/Lesson/Lesson';
 import HorizontalDivider from '@/components/HorizontalDivider/HorizontalDivider';
 import { supabase } from '@/supabase';
-
-const mockData = [
-    {
-        id: 1,
-        name: 'Lesson 1',
-        description: 'Nice lesson',
-        uri: 'https://www.youtube.com/watch?v=jfKfPfyJRdk&ab_channel=LofiGirl',
-        duration: 5,
-    },
-    { id: 2, name: 'Lesson 2', description: 'Nice lesson' },
-    { id: 3, name: 'Lesson 3', description: 'Nice lesson' },
-];
 
 async function getData() {
     const { data, error } = await supabase
