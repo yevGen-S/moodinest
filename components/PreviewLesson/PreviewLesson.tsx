@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import useGetThumbnail from '@/hooks/useGetThumbnail';
+import { router } from 'expo-router';
 
 export type PreviewLessonProps = {
     id: string;
@@ -15,7 +16,12 @@ export type PreviewLessonProps = {
     name: string;
 };
 
-const PreviewLesson = ({ name, videoURL, thumbnail }: PreviewLessonProps) => {
+const PreviewLesson = ({
+    id,
+    name,
+    videoURL,
+    thumbnail,
+}: PreviewLessonProps) => {
     const { videoThumbnail } = useGetThumbnail(videoURL);
 
     return (
@@ -42,7 +48,12 @@ const PreviewLesson = ({ name, videoURL, thumbnail }: PreviewLessonProps) => {
                     alignItems: 'center',
                 }}
                 activeOpacity={0.7}
-                onPress={() => {}}
+                onPress={() =>
+                    router.navigate({
+                        pathname: '../(app)/meditation-card/[id]',
+                        params: { id, name, videoThumbnail },
+                    })
+                }
             >
                 {videoThumbnail && (
                     <Image
