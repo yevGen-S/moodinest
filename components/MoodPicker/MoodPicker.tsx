@@ -3,7 +3,6 @@ import React, { useContext } from 'react';
 import HorizontalDivider from '../HorizontalDivider/HorizontalDivider';
 import { generalStyles } from '@/constants/theme';
 import images from '@/constants/images';
-import icons from '@/constants/icons';
 import { MoodContext } from '@/context/MoodContext';
 
 const MoodPicker = () => {
@@ -65,7 +64,6 @@ const styles = StyleSheet.create({
     },
     title: {
         ...generalStyles.font,
-        // fontSize: 16,
         marginBottom: 7,
         marginLeft: 20,
     },
@@ -80,8 +78,5 @@ const styles = StyleSheet.create({
         width: 45,
         height: 45,
         objectFit: 'contain',
-        // borderRadius: 1000,
-        // borderWidth: 2,
-        // borderColor: '#AFB1B6',
     },
 });

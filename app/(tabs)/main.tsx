@@ -9,8 +9,6 @@ import CustomButton from '@/components/CustomButton/CustomButton';
 import { MoodProvider } from '@/context/MoodContext';
 
 const Main = () => {
-
-
     return (
         <MoodProvider>
             <SafeAreaView
