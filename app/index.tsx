@@ -1,4 +1,4 @@
-import { router, SplashScreen, useNavigation } from 'expo-router';
+import { router, SplashScreen } from 'expo-router';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
