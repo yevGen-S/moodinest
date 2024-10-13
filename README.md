@@ -8,13 +8,13 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 2. Install dependencies.
    
-Run commad in proect dir:
+Run commad in project dir:
 
    ```bash
    npm install
    ```
 
-4. Start the app
+3. Start the app
 
    ```bash
     npm start
