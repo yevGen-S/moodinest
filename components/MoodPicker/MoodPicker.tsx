@@ -1,10 +1,13 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 import HorizontalDivider from '../HorizontalDivider/HorizontalDivider';
 import { generalStyles } from '@/constants/theme';
 import images from '@/constants/images';
+import { MoodContext } from '@/context/MoodContext';
 
 const MoodPicker = () => {
+    const { mood, isToday } = useContext(MoodContext);
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Как ваше настроение?</Text>
@@ -13,35 +16,35 @@ const MoodPicker = () => {
                 {/* TODO: change images and add handler */}
                 <TouchableOpacity>
                     <Image
-                        source={images.meditation}
+                        source={images.cryingColor}
                         resizeMode="cover"
                         style={styles.pickerImage}
                     />
                 </TouchableOpacity>
                 <TouchableOpacity>
                     <Image
-                        source={images.meditation}
+                        source={images.sadFaceColor}
                         resizeMode="cover"
                         style={styles.pickerImage}
                     />
                 </TouchableOpacity>
                 <TouchableOpacity>
                     <Image
-                        source={images.meditation}
+                        source={images.neutralColor}
                         resizeMode="cover"
                         style={styles.pickerImage}
                     />
                 </TouchableOpacity>
                 <TouchableOpacity>
                     <Image
-                        source={images.meditation}
+                        source={images.smileColor}
                         resizeMode="cover"
                         style={styles.pickerImage}
                     />
                 </TouchableOpacity>
                 <TouchableOpacity>
                     <Image
-                        source={images.meditation}
+                        source={images.happyColor}
                         resizeMode="cover"
                         style={styles.pickerImage}
                     />
@@ -57,25 +60,23 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         alignItems: 'flex-start',
-        marginBottom: 20,
+        marginBottom: 5,
     },
     title: {
         ...generalStyles.font,
-        fontSize: 16,
-        marginBottom: 15,
-        marginLeft: 15,
+        marginBottom: 7,
+        marginLeft: 20,
     },
     picker: {
         width: '90%',
         gap: 10,
         flexDirection: 'row',
         alignSelf: 'center',
+        justifyContent: 'space-between',
     },
     pickerImage: {
-        width: 64,
-        height: 64,
-        borderRadius: 1000,
-        borderWidth: 2,
-        borderColor: '#AFB1B6',
+        width: 45,
+        height: 45,
+        objectFit: 'contain',
     },
 });
