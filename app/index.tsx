@@ -1,25 +1,17 @@
-import { router, SplashScreen, useNavigation } from 'expo-router';
+import { router } from 'expo-router';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { useFonts } from 'expo-font';
-import { useEffect } from 'react';
 import icons from '@/constants/icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomButton from '@/components/CustomButton/CustomButton';
 
-SplashScreen.preventAutoHideAsync();
-
 export default function App() {
-    const [loaded, error] = useFonts({
-        'Work-Sans': require('../assets/fonts/WorkSans-Regular.ttf'),
+    const [fontsLoaded] = useFonts({
+        WorkSans: require('../assets/fonts/WorkSans-Regular.ttf'),
     });
-    useEffect(() => {
-        if (loaded || error) {
-            SplashScreen.hideAsync();
-        }
-    }, [loaded, error]);
 
-    if (!loaded && !error) {
-        return null;
+    if (!fontsLoaded) {
+        return <></>;
     }
 
     return (
