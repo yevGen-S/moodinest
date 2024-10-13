@@ -72,14 +72,12 @@ const LastWeekCalendar = () => {
             const { moodData, userID } = await fetchMoodDataFromBackend(currentDate);
             setMoodData(moodData);
             setUserID(userID);
+            setMood(moodData[0].mood);
+            setIsToday(true);
         };
     
         fetchData();
-    }, [currentDate]);
-
-    useEffect(() => {
-        handleDateSelect(currentDate);
-    }, []);
+    }, [currentDate, selectedDate]);
 
     const getWeekDates = () => {
         const startOfWeek = currentDate.startOf('isoWeek');
@@ -90,7 +88,13 @@ const LastWeekCalendar = () => {
     const isFuture = (date: dayjs.Dayjs) => date.isAfter(currentDate, 'day');
 
     const getMoodForDate = (date: dayjs.Dayjs) => {
-        const moodEntry = moodData.find(mood => date.isSame(mood.date, 'day'));
+        const formattedDate = date.format('YYYY-MM-DD');
+    
+        const moodEntry = moodData.find(mood => {
+            const formattedMoodDate = mood.date.format('YYYY-MM-DD');
+            return formattedDate === formattedMoodDate;
+        });
+
         return moodEntry ? moodEntry.mood : null;
     };
 
