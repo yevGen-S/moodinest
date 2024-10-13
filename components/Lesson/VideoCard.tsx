@@ -11,6 +11,7 @@ import icons from '@/constants/icons';
 import { StatusBar } from 'expo-status-bar';
 import { Video, ResizeMode } from 'expo-av';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import * as VideoThumbnails from 'expo-video-thumbnails';
 
 type VideoCardProps = {
     play: boolean;
@@ -26,15 +27,15 @@ type VideoCardProps = {
 const VideoCard = ({
     play,
     onPress,
-    thubnail,
     duration,
     isFavourite = false,
     videoURL,
 }: VideoCardProps) => {
     const videoRef = useRef<Video | null>(null);
+    const [thumbnail, setThumbnail] = useState<string | null>(null);
 
     const [currentResizeMode, setCurrentResizeMode] = useState<ResizeMode.COVER | ResizeMode.CONTAIN>(ResizeMode.COVER);
-
+    
     const handleOrientationChange = async () => {
       const orientation = await ScreenOrientation.getOrientationAsync();
 
@@ -61,6 +62,21 @@ const VideoCard = ({
       };
     }, []);
 
+    useEffect(() => {
+        const createThumbnail = async () => {
+            try {
+                const { uri } = await VideoThumbnails.getThumbnailAsync(videoURL, {
+                    time: 15000,
+                });
+                setThumbnail(uri);
+            } catch (error) {
+                console.error("Ошибка при создании миниатюры:", error);
+            }
+        };
+
+        createThumbnail();
+    }, [videoURL]);
+
     return (
         <>
             {play ? (
@@ -82,9 +98,9 @@ const VideoCard = ({
                     activeOpacity={0.7}
                     onPress={onPress}
                 >
-                    {thubnail && (
+                    {thumbnail && (
                         <Image
-                            source={thubnail}
+                            source={{ uri: thumbnail }}
                             style={styles.thubnail}
                             resizeMode="cover"
                         />
