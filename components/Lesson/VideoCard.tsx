@@ -12,6 +12,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Video, ResizeMode } from 'expo-av';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import * as VideoThumbnails from 'expo-video-thumbnails';
+import useGetThumbnail from '@/hooks/useGetThumbnail';
 
 type VideoCardProps = {
     play: boolean;
@@ -23,7 +24,6 @@ type VideoCardProps = {
     isFavourite?: boolean;
 };
 
-
 const VideoCard = ({
     play,
     onPress,
@@ -32,50 +32,41 @@ const VideoCard = ({
     videoURL,
 }: VideoCardProps) => {
     const videoRef = useRef<Video | null>(null);
-    const [thumbnail, setThumbnail] = useState<string | null>(null);
+    const { videoThumbnail } = useGetThumbnail(videoURL);
 
-    const [currentResizeMode, setCurrentResizeMode] = useState<ResizeMode.COVER | ResizeMode.CONTAIN>(ResizeMode.COVER);
-    
+    const [currentResizeMode, setCurrentResizeMode] = useState<
+        ResizeMode.COVER | ResizeMode.CONTAIN
+    >(ResizeMode.COVER);
+
     const handleOrientationChange = async () => {
-      const orientation = await ScreenOrientation.getOrientationAsync();
+        const orientation = await ScreenOrientation.getOrientationAsync();
 
-      if(orientation === ScreenOrientation.Orientation.PORTRAIT_UP) {
-        setCurrentResizeMode(ResizeMode.CONTAIN);
-      } else {
-        setCurrentResizeMode(ResizeMode.COVER);
-      }
+        if (orientation === ScreenOrientation.Orientation.PORTRAIT_UP) {
+            setCurrentResizeMode(ResizeMode.CONTAIN);
+        } else {
+            setCurrentResizeMode(ResizeMode.COVER);
+        }
     };
-  
-    useEffect(() => {
-      const lockOrientation = async () => {
-        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.DEFAULT);
-      };
-  
-      lockOrientation();
-  
-      const subscription = ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
-  
-      handleOrientationChange();
-  
-      return () => {
-        subscription.remove();
-      };
-    }, []);
 
     useEffect(() => {
-        const createThumbnail = async () => {
-            try {
-                const { uri } = await VideoThumbnails.getThumbnailAsync(videoURL, {
-                    time: 15000,
-                });
-                setThumbnail(uri);
-            } catch (error) {
-                console.error("Ошибка при создании миниатюры:", error);
-            }
+        const lockOrientation = async () => {
+            await ScreenOrientation.lockAsync(
+                ScreenOrientation.OrientationLock.DEFAULT
+            );
         };
 
-        createThumbnail();
-    }, [videoURL]);
+        lockOrientation();
+
+        const subscription = ScreenOrientation.addOrientationChangeListener(
+            handleOrientationChange
+        );
+
+        handleOrientationChange();
+
+        return () => {
+            subscription.remove();
+        };
+    }, []);
 
     return (
         <>
@@ -85,7 +76,7 @@ const VideoCard = ({
                         ref={videoRef}
                         style={styles.videoArea}
                         source={{
-                           uri: videoURL
+                            uri: videoURL,
                         }}
                         useNativeControls
                         resizeMode={currentResizeMode}
@@ -98,9 +89,9 @@ const VideoCard = ({
                     activeOpacity={0.7}
                     onPress={onPress}
                 >
-                    {thumbnail && (
+                    {videoThumbnail && (
                         <Image
-                            source={{ uri: thumbnail }}
+                            source={{ uri: videoThumbnail }}
                             style={styles.thubnail}
                             resizeMode="cover"
                         />

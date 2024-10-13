@@ -13,6 +13,10 @@ export default function RootLayout() {
                     headerShown: false,
                 }}
             />
+            <Stack.Screen
+                name="suggestions"
+                options={{ headerTitle: '' }}
+            />
         </Stack>
     );
 }

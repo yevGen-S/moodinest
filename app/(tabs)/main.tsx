@@ -7,6 +7,7 @@ import images from '@/constants/images';
 import MoodPicker from '@/components/MoodPicker/MoodPicker';
 import CustomButton from '@/components/CustomButton/CustomButton';
 import { MoodProvider } from '@/context/MoodContext';
+import { router } from 'expo-router';
 
 const Main = () => {
     return (
@@ -26,7 +27,10 @@ const Main = () => {
                     resizeMode="cover"
                 />
                 <MoodPicker />
-                <CustomButton showText="Подобрать медитацию" />
+                <CustomButton
+                    showText="Подобрать медитацию"
+                    onPress={() => router.navigate('../suggestions')}
+                />
             </SafeAreaView>
         </MoodProvider>
     );
