@@ -14,7 +14,11 @@ export default function RootLayout() {
                 }}
             />
             <Stack.Screen
-                name="suggestions"
+                name="(app)/suggestions"
+                options={{ headerTitle: '' }}
+            />
+            <Stack.Screen
+                name="(app)/meditation-card/[id]"
                 options={{ headerTitle: '' }}
             />
         </Stack>

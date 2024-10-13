@@ -29,7 +29,7 @@ const Main = () => {
                 <MoodPicker />
                 <CustomButton
                     showText="Подобрать медитацию"
-                    onPress={() => router.navigate('../suggestions')}
+                    onPress={() => router.navigate('../(app)/suggestions')}
                 />
             </SafeAreaView>
         </MoodProvider>

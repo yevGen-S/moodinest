@@ -11,7 +11,6 @@ import icons from '@/constants/icons';
 import { StatusBar } from 'expo-status-bar';
 import { Video, ResizeMode } from 'expo-av';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import * as VideoThumbnails from 'expo-video-thumbnails';
 import useGetThumbnail from '@/hooks/useGetThumbnail';
 
 type VideoCardProps = {

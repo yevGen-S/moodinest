@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { generalStyles } from '@/constants/theme';
 import VideoCard from './VideoCard';
 
-type LessonProps = {
+export type LessonProps = {
     videoURL: string;
     thubnail?: ImageURISource;
     name: string;
