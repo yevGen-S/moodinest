@@ -6,19 +6,21 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import icons from '@/constants/icons';
 import { StatusBar } from 'expo-status-bar';
+import { Video, ResizeMode } from 'expo-av';
 
 type VideoCardProps = {
     play: boolean;
     onPress: () => void;
     setPlay: (value: boolean) => void;
-    uri?: string;
+    videoURL: string;
     thubnail?: ImageURISource;
     duration?: number;
     isFavourite?: boolean;
 };
+
 
 const VideoCard = ({
     play,
@@ -26,19 +28,29 @@ const VideoCard = ({
     thubnail,
     duration,
     isFavourite = false,
+    videoURL,
 }: VideoCardProps) => {
+    const video = useRef(null);
     return (
         <>
             {play ? (
                 <>
-                    <Text>Video playing</Text>
+                    <Video
+                        ref={video}
+                        style={styles.videoArea}
+                        source={{
+                           uri: videoURL
+                        }}
+                        useNativeControls
+                        resizeMode={ResizeMode.CONTAIN}
+                    />
                     <StatusBar style="auto" />
                 </>
             ) : (
                 <TouchableOpacity
                     style={styles.videoArea}
                     activeOpacity={0.7}
-                    // onPress={onPress}
+                    onPress={onPress}
                 >
                     {thubnail && (
                         <Image
