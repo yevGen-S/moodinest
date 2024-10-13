@@ -6,9 +6,10 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
-import React from 'react';
+import React, { useRef } from 'react';
 import icons from '@/constants/icons';
 import { StatusBar } from 'expo-status-bar';
+import { Video, ResizeMode } from 'expo-av';
 
 type VideoCardProps = {
     play: boolean;
@@ -27,18 +28,27 @@ const VideoCard = ({
     duration,
     isFavourite = false,
 }: VideoCardProps) => {
+    const video = useRef(null);
     return (
         <>
             {play ? (
                 <>
-                    <Text>Video playing</Text>
+                    <Video
+                        ref={video}
+                        style={styles.videoArea}
+                        source={{
+                            uri: 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
+                        }}
+                        useNativeControls
+                        resizeMode={ResizeMode.COVER}
+                    />
                     <StatusBar style="auto" />
                 </>
             ) : (
                 <TouchableOpacity
                     style={styles.videoArea}
                     activeOpacity={0.7}
-                    // onPress={onPress}
+                    onPress={onPress}
                 >
                     {thubnail && (
                         <Image
