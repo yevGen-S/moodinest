@@ -7,19 +7,16 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import { MoodContext } from '@/context/MoodContext';
 import { supabase } from '@/supabase';
 
+import dayjs from 'dayjs';
 
 const MoodPicker = () => {
     const { mood, isToday, setMood, userID} = useContext(MoodContext);
 
-    const getCurrentDate = () => {
-            const today = new Date();
-            return today.toISOString().split('T')[0];
-        };       
-    const currentDate = getCurrentDate();
+    const currentDate = dayjs().format('YYYY-MM-DD');
 
     const handleMoodSelect = async (selectedMood: number) => {
         try {
-            if (!selectedMood) {
+            if (!mood) {
                 await insertMoodData(selectedMood);
             } else {
                 await updateMoodData(selectedMood);
