@@ -4,19 +4,42 @@ import { generalStyles } from '@/constants/theme';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { MoodContext } from '@/context/MoodContext';
+import { supabase } from '@/supabase';
 
 dayjs.extend(isoWeek);
 
 const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
-// Функция для имитации получения данных с бэка
-const fetchMoodData = (currentDate: dayjs.Dayjs) => {
-    const today = currentDate.isoWeekday();
-    // данные только за прошедшие и сегодняшний дни
-    return Array.from({ length: today }, (_, index) => ({
-        date: currentDate.startOf('isoWeek').add(index, 'day'),
-        mood: Math.floor(Math.random() * 5) + 1, // настроение от 1 до 5
-    }));
+interface CalendarEntry {
+    userID: number;
+    date: string;
+    mood: number;
+}
+
+const fetchMoodDataFromBackend = async (currentDate: dayjs.Dayjs) => {
+    const startOfWeek = currentDate.startOf('isoWeek').format('YYYY-MM-DD');
+    const endOfWeek = currentDate.endOf('isoWeek').format('YYYY-MM-DD');
+
+    let { data, error }: { data: CalendarEntry[] | null, error: any } = await supabase
+        .from('Calendar')
+        .select('*')
+        .gte('date', startOfWeek)
+        .lte('date', endOfWeek);
+
+    if (error) {
+        console.error(error);
+        return { moodData: [], userID: null };
+    }
+
+    const userID = data?.[0]?.userID || 0;
+
+    return {
+        moodData: data?.map((item) => ({
+            date: dayjs(item.date),
+            mood: item.mood,
+        })) || [],
+        userID,
+    };
 };
 
 export const getColorByMood = (mood: number) => {
@@ -36,20 +59,27 @@ export const getColorByMood = (mood: number) => {
     }
 };
 
+
 const LastWeekCalendar = () => {
     const { setMood, setIsToday } = useContext(MoodContext);
     const [currentDate, setCurrentDate] = useState(dayjs());
     const [selectedDate, setSelectedDate] = useState(currentDate);
     const [moodData, setMoodData] = useState<{ date: dayjs.Dayjs, mood: number }[]>([]);
+    const [userID, setUserID] = useState<number | null>(null);
 
     useEffect(() => {
-        // Эмулируем получение данных по настроению с бэка
-        const data = fetchMoodData(currentDate);
-        setMoodData(data);
-    }, [currentDate]);
+        const fetchData = async () => {
+            const { moodData, userID } = await fetchMoodDataFromBackend(currentDate);
+            setMoodData(moodData);
+            setUserID(userID);
+            setMood(moodData[0].mood);
+            setIsToday(true);
+        };
+    
+        fetchData();
+    }, [currentDate, selectedDate]);
 
     const getWeekDates = () => {
-        // начало недели с понедельника
         const startOfWeek = currentDate.startOf('isoWeek');
         return Array.from({ length: 7 }, (_, index) => startOfWeek.add(index, 'day'));
     };
@@ -58,7 +88,13 @@ const LastWeekCalendar = () => {
     const isFuture = (date: dayjs.Dayjs) => date.isAfter(currentDate, 'day');
 
     const getMoodForDate = (date: dayjs.Dayjs) => {
-        const moodEntry = moodData.find(mood => date.isSame(mood.date, 'day'));
+        const formattedDate = date.format('YYYY-MM-DD');
+    
+        const moodEntry = moodData.find(mood => {
+            const formattedMoodDate = mood.date.format('YYYY-MM-DD');
+            return formattedDate === formattedMoodDate;
+        });
+
         return moodEntry ? moodEntry.mood : null;
     };
 
