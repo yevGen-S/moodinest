@@ -3,44 +3,18 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { generalStyles } from '@/constants/theme';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { MoodContext } from '@/context/MoodContext';
 import { supabase } from '@/supabase';
 
 dayjs.extend(isoWeek);
 
 const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
-interface CalendarEntry {
-    userID: number;
-    date: string;
-    mood: number;
+interface LastWeekCalendarProps {
+    currentDate: dayjs.Dayjs;
+    moodData: object;
+    setMood: (mood: number) => void;
+    setIsToday: (isToday: boolean) => void;
 }
-
-const fetchMoodDataFromBackend = async (currentDate: dayjs.Dayjs) => {
-    const startOfWeek = currentDate.startOf('isoWeek').format('YYYY-MM-DD');
-    const endOfWeek = currentDate.endOf('isoWeek').format('YYYY-MM-DD');
-
-    let { data, error }: { data: CalendarEntry[] | null, error: any } = await supabase
-        .from('Calendar')
-        .select('*')
-        .gte('date', startOfWeek)
-        .lte('date', endOfWeek);
-
-    if (error) {
-        console.error(error);
-        return { moodData: [], userID: null };
-    }
-
-    const userID = data?.[0]?.userID || 0;
-
-    return {
-        moodData: data?.map((item) => ({
-            date: dayjs(item.date),
-            mood: item.mood,
-        })) || [],
-        userID,
-    };
-};
 
 const getColorByMood = (mood: number) => {
     switch (mood) {
@@ -60,24 +34,12 @@ const getColorByMood = (mood: number) => {
 };
 
 
-const LastWeekCalendar = () => {
-    const { setMood, setIsToday } = useContext(MoodContext);
-    const [currentDate, setCurrentDate] = useState(dayjs());
+const LastWeekCalendar: React.FC<LastWeekCalendarProps> = ({ currentDate, moodData, setMood, setIsToday }) => {
     const [selectedDate, setSelectedDate] = useState(currentDate);
-    const [moodData, setMoodData] = useState<{ date: dayjs.Dayjs, mood: number }[]>([]);
-    const [userID, setUserID] = useState<number | null>(null);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const { moodData, userID } = await fetchMoodDataFromBackend(currentDate);
-            setMoodData(moodData);
-            setUserID(userID);
-            setMood(moodData[0].mood);
-            setIsToday(true);
-        };
-    
-        fetchData();
-    }, [currentDate, selectedDate]);
+        handleDateSelect(currentDate);
+    }, [moodData]);
 
     const getWeekDates = () => {
         const startOfWeek = currentDate.startOf('isoWeek');
@@ -92,22 +54,24 @@ const LastWeekCalendar = () => {
     
         const moodEntry = moodData.find(mood => {
             const formattedMoodDate = mood.date.format('YYYY-MM-DD');
+            // const formattedMoodDate = dayjs(mood.date).format('YYYY-MM-DD');
             return formattedDate === formattedMoodDate;
         });
-
-        return moodEntry ? moodEntry.mood : null;
+    
+        return moodEntry ? moodEntry.mood : 0;
     };
+    
 
     const handleDateSelect = (date: dayjs.Dayjs) => {
         setSelectedDate(date);
         const mood = getMoodForDate(date);
-        setMood(mood || 0);
+        setMood(mood);
         setIsToday(isToday(date));
     };
 
     return (
         <View style={styles.container}>
-            {getWeekDates().map((date, index) => {
+            { getWeekDates().map((date, index) => {
                 const mood = getMoodForDate(date);
                 const moodColor = mood ? getColorByMood(mood) : '#FFFFFF';
 
