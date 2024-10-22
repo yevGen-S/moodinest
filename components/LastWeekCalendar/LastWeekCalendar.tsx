@@ -11,7 +11,7 @@ const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
 interface LastWeekCalendarProps {
     currentDate: dayjs.Dayjs;
-    moodData: object;
+    moodData: {date: dayjs.Dayjs, mood: number}[];
     setMood: (mood: number) => void;
     setIsToday: (isToday: boolean) => void;
 }
@@ -52,9 +52,8 @@ const LastWeekCalendar: React.FC<LastWeekCalendarProps> = ({ currentDate, moodDa
     const getMoodForDate = (date: dayjs.Dayjs) => {
         const formattedDate = date.format('YYYY-MM-DD');
     
-        const moodEntry = moodData.find(mood => {
+        const moodEntry = moodData?.find(mood => {
             const formattedMoodDate = mood.date.format('YYYY-MM-DD');
-            // const formattedMoodDate = dayjs(mood.date).format('YYYY-MM-DD');
             return formattedDate === formattedMoodDate;
         });
     
