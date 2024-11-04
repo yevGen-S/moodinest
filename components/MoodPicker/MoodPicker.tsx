@@ -1,50 +1,70 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useContext } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
+import React, { useContext, useState } from 'react';
 import HorizontalDivider from '../HorizontalDivider/HorizontalDivider';
 import { generalStyles } from '@/constants/theme';
 import images from '@/constants/images';
-import { MoodContext } from '@/context/MoodContext';
 
-const MoodPicker = () => {
-    const { mood, isToday } = useContext(MoodContext);
+interface MoodPickerProps {
+    mood: number;
+    isToday: boolean;
+    insertMoodData: (mood: number) => void;
+    updateMoodData: (mood: number) => void;
+    setChangedMood: (mood: number) => void;
+}
+
+const MoodPicker: React.FC<MoodPickerProps> = ({ mood, isToday, insertMoodData, updateMoodData, setChangedMood }) => {
+
+    const handleMoodSelect = async (selectedMood: number) => {
+        setChangedMood(selectedMood);
+        try {
+            if (!mood) {
+                await insertMoodData(selectedMood);
+            } else {
+                await updateMoodData(selectedMood);
+            }
+        } catch (error) {
+            console.error("Ошибка при обновлении настроения:", error);
+        }
+    };
+
+    
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Как ваше настроение?</Text>
             <HorizontalDivider />
             <View style={styles.picker}>
-                {/* TODO: change images and add handler */}
-                <TouchableOpacity>
+                <TouchableOpacity disabled={!isToday} onPress={() => handleMoodSelect(1)}>
                     <Image
-                        source={images.cryingColor}
+                        source={mood === 1 || !mood && isToday ? images.cryingColor: images.crying}
                         resizeMode="cover"
                         style={styles.pickerImage}
                     />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity disabled={!isToday} onPress={() => handleMoodSelect(2)}>
                     <Image
-                        source={images.sadFaceColor}
+                        source={mood === 2 || !mood && isToday ? images.sadFaceColor : images.sadFace}
                         resizeMode="cover"
                         style={styles.pickerImage}
                     />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity disabled={!isToday} onPress={() => handleMoodSelect(3)}>
                     <Image
-                        source={images.neutralColor}
+                        source={mood === 3 || !mood && isToday ? images.neutralColor : images.neutral}
                         resizeMode="cover"
                         style={styles.pickerImage}
                     />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity disabled={!isToday} onPress={() => handleMoodSelect(4)}>
                     <Image
-                        source={images.smileColor}
+                        source={mood === 4 || !mood && isToday ? images.smileColor : images.smile}
                         resizeMode="cover"
                         style={styles.pickerImage}
                     />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity disabled={!isToday} onPress={() => handleMoodSelect(5)}>
                     <Image
-                        source={images.happyColor}
+                        source={mood === 5 || !mood && isToday ? images.happyColor : images.happy}
                         resizeMode="cover"
                         style={styles.pickerImage}
                     />
@@ -75,8 +95,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     pickerImage: {
-        width: 45,
-        height: 45,
+        width: 47,
+        height: 47,
         objectFit: 'contain',
     },
 });
