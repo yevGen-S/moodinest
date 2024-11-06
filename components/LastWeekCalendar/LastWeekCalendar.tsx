@@ -1,22 +1,20 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { generalStyles } from '@/constants/theme';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { MoodContext } from '@/context/MoodContext';
+import { MoodRecord } from '@/constants/mood';
+import { dateFormat } from '@/constants/date';
 
 dayjs.extend(isoWeek);
 
 const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
-// Функция для имитации получения данных с бэка
-const fetchMoodData = (currentDate: dayjs.Dayjs) => {
-    const today = currentDate.isoWeekday();
-    // данные только за прошедшие и сегодняшний дни
-    return Array.from({ length: today }, (_, index) => ({
-        date: currentDate.startOf('isoWeek').add(index, 'day'),
-        mood: Math.floor(Math.random() * 5) + 1, // настроение от 1 до 5
-    }));
+type LastWeekCalendarProps = {
+    currentDate: dayjs.Dayjs;
+    setCurrentDate: (date: dayjs.Dayjs) => void;
+    moodData: MoodRecord;
+    setIsToday: (isToday: boolean) => void;
 };
 
 export const getColorByMood = (mood: number) => {
@@ -36,44 +34,38 @@ export const getColorByMood = (mood: number) => {
     }
 };
 
-const LastWeekCalendar = () => {
-    const { setMood, setIsToday } = useContext(MoodContext);
-    const [currentDate, setCurrentDate] = useState(dayjs());
-    const [selectedDate, setSelectedDate] = useState(currentDate);
-    const [moodData, setMoodData] = useState<{ date: dayjs.Dayjs, mood: number }[]>([]);
+const LastWeekCalendar: React.FC<LastWeekCalendarProps> = ({
+    currentDate,
+    moodData,
+    setIsToday,
+    setCurrentDate,
+}) => {
+    const todayDate = dayjs();
 
-    useEffect(() => {
-        // Эмулируем получение данных по настроению с бэка
-        const data = fetchMoodData(currentDate);
-        setMoodData(data);
-    }, [currentDate]);
-
-    const getWeekDates = () => {
-        // начало недели с понедельника
-        const startOfWeek = currentDate.startOf('isoWeek');
-        return Array.from({ length: 7 }, (_, index) => startOfWeek.add(index, 'day'));
-    };
-
-    const isToday = (date: dayjs.Dayjs) => date.isSame(currentDate, 'day');
-    const isFuture = (date: dayjs.Dayjs) => date.isAfter(currentDate, 'day');
-
-    const getMoodForDate = (date: dayjs.Dayjs) => {
-        const moodEntry = moodData.find(mood => date.isSame(mood.date, 'day'));
-        return moodEntry ? moodEntry.mood : null;
-    };
+    const isToday = (date: dayjs.Dayjs) => date.isSame(todayDate, 'day');
+    const isFuture = (date: dayjs.Dayjs) => date.isAfter(todayDate, 'day');
 
     const handleDateSelect = (date: dayjs.Dayjs) => {
-        setSelectedDate(date);
-        const mood = getMoodForDate(date);
-        setMood(mood || 0);
+        setCurrentDate(date);
         setIsToday(isToday(date));
+    };
+
+    useEffect(() => {
+        handleDateSelect(todayDate);
+    }, [moodData]);
+
+    const getWeekDates = () => {
+        const startOfWeek = todayDate.startOf('isoWeek');
+        return Array.from({ length: 7 }, (_, index) =>
+            startOfWeek.add(index, 'day')
+        );
     };
 
     return (
         <View style={styles.container}>
             {getWeekDates().map((date, index) => {
-                const mood = getMoodForDate(date);
-                const moodColor = mood ? getColorByMood(mood) : '#FFFFFF';
+                const mood = moodData[date.format(dateFormat)] ?? 0;
+                const moodColor = getColorByMood(mood);
 
                 return (
                     <TouchableOpacity
@@ -81,11 +73,16 @@ const LastWeekCalendar = () => {
                         disabled={isFuture(date)}
                         style={[
                             styles.dateContainer,
-                            isFuture(date) && styles.disabledDate
+                            isFuture(date) && styles.disabledDate,
                         ]}
                         onPress={() => handleDateSelect(date)}
                     >
-                        <Text style={[styles.day, isFuture(date) && styles.disabledText]}>
+                        <Text
+                            style={[
+                                styles.day,
+                                isFuture(date) && styles.disabledText,
+                            ]}
+                        >
                             {daysOfWeek[index]}
                         </Text>
                         <Text
@@ -94,7 +91,8 @@ const LastWeekCalendar = () => {
                                 { backgroundColor: moodColor },
                                 isToday(date) && styles.todayBorder,
                                 isFuture(date) && styles.disabledText,
-                                date.isSame(selectedDate, 'day') && styles.selectedDayBorder
+                                date.isSame(currentDate, 'day') &&
+                                    styles.selectedDayBorder,
                             ]}
                         >
                             {date.format('D')}
