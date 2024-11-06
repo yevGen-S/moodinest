@@ -6,16 +6,18 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import icons from '@/constants/icons';
 import { StatusBar } from 'expo-status-bar';
 import { Video, ResizeMode } from 'expo-av';
+import * as ScreenOrientation from 'expo-screen-orientation';
+import useGetThumbnail from '@/hooks/useGetThumbnail';
 
 type VideoCardProps = {
     play: boolean;
     onPress: () => void;
     setPlay: (value: boolean) => void;
-    uri?: string;
+    videoURL: string;
     thubnail?: ImageURISource;
     duration?: number;
     isFavourite?: boolean;
@@ -24,23 +26,59 @@ type VideoCardProps = {
 const VideoCard = ({
     play,
     onPress,
-    thubnail,
     duration,
     isFavourite = false,
+    videoURL,
 }: VideoCardProps) => {
-    const video = useRef(null);
+    const videoRef = useRef<Video | null>(null);
+    const { videoThumbnail } = useGetThumbnail(videoURL);
+
+    const [currentResizeMode, setCurrentResizeMode] = useState<
+        ResizeMode.COVER | ResizeMode.CONTAIN
+    >(ResizeMode.COVER);
+
+    const handleOrientationChange = async () => {
+        const orientation = await ScreenOrientation.getOrientationAsync();
+
+        if (orientation === ScreenOrientation.Orientation.PORTRAIT_UP) {
+            setCurrentResizeMode(ResizeMode.CONTAIN);
+        } else {
+            setCurrentResizeMode(ResizeMode.COVER);
+        }
+    };
+
+    useEffect(() => {
+        const lockOrientation = async () => {
+            await ScreenOrientation.lockAsync(
+                ScreenOrientation.OrientationLock.DEFAULT
+            );
+        };
+
+        lockOrientation();
+
+        const subscription = ScreenOrientation.addOrientationChangeListener(
+            handleOrientationChange
+        );
+
+        handleOrientationChange();
+
+        return () => {
+            subscription.remove();
+        };
+    }, []);
+
     return (
         <>
             {play ? (
                 <>
                     <Video
-                        ref={video}
+                        ref={videoRef}
                         style={styles.videoArea}
                         source={{
-                            uri: 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
+                            uri: videoURL,
                         }}
                         useNativeControls
-                        resizeMode={ResizeMode.COVER}
+                        resizeMode={currentResizeMode}
                     />
                     <StatusBar style="auto" />
                 </>
@@ -50,9 +88,9 @@ const VideoCard = ({
                     activeOpacity={0.7}
                     onPress={onPress}
                 >
-                    {thubnail && (
+                    {videoThumbnail && (
                         <Image
-                            source={thubnail}
+                            source={{ uri: videoThumbnail }}
                             style={styles.thubnail}
                             resizeMode="cover"
                         />

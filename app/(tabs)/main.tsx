@@ -1,4 +1,4 @@
-import { Text, StyleSheet, Image, Alert } from 'react-native';
+import { Text, StyleSheet, Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { generalStyles } from '@/constants/theme';
@@ -9,19 +9,17 @@ import CustomButton from '@/components/CustomButton/CustomButton';
 import { supabase } from '@/supabase';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import { router } from 'expo-router';
+import { dateFormat } from '@/constants/date';
+import { MoodRecord } from '@/constants/mood';
 
 dayjs.extend(isoWeek);
-
-export const dateFormat = 'YYYY-MM-DD';
 
 interface CalendarEntry {
     userID: number;
     date: string;
     mood: number;
 }
-
-export type MoodData = { date: dayjs.Dayjs; mood: string };
-export type MoodRecord = { [key: string]: number };
 
 const fetchMoodData = async (currentDate: dayjs.Dayjs) => {
     const startOfWeek = currentDate.startOf('isoWeek').format(dateFormat);
@@ -149,7 +147,10 @@ const Main = () => {
                 updateMoodData={updateMoodData}
             />
 
-            <CustomButton showText="Подобрать медитацию" />
+            <CustomButton
+                showText="Подобрать медитацию"
+                onPress={() => router.navigate('../(app)/suggestions')}
+            />
         </SafeAreaView>
     );
 };

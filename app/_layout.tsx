@@ -13,6 +13,14 @@ export default function RootLayout() {
                     headerShown: false,
                 }}
             />
+            <Stack.Screen
+                name="(app)/suggestions"
+                options={{ headerTitle: '' }}
+            />
+            <Stack.Screen
+                name="(app)/meditation-card/[id]"
+                options={{ headerTitle: '' }}
+            />
         </Stack>
     );
 }

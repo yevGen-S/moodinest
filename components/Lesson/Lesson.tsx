@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { generalStyles } from '@/constants/theme';
 import VideoCard from './VideoCard';
 
-type LessonProps = {
-    uri?: string;
+export type LessonProps = {
+    videoURL: string;
     thubnail?: ImageURISource;
     name: string;
     description?: string;
@@ -13,7 +13,7 @@ type LessonProps = {
 };
 
 const Lesson = ({
-    uri,
+    videoURL,
     thubnail,
     name,
     description,
@@ -24,7 +24,7 @@ const Lesson = ({
     return (
         <View style={styles.container}>
             <VideoCard
-                uri={uri}
+                videoURL={videoURL}
                 thubnail={thubnail}
                 play={play}
                 onPress={() => setPlay(true)}

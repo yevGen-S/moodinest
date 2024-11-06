@@ -7,6 +7,7 @@ import search from '../assets/icons/search.png';
 import filter from '../assets/icons/filter.png';
 import play from '../assets/icons/play.png';
 import bookmark from '../assets/icons/bookmark.png';
+import star from '../assets/icons/star.png';
 
 export default {
     profile,
@@ -18,4 +19,5 @@ export default {
     filter,
     play,
     bookmark,
+    star,
 };

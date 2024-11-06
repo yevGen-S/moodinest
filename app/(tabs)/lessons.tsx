@@ -1,25 +1,32 @@
 import { FlatList, StyleSheet, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchInput from '@/components/SearchInput/SearchInput';
 import { generalStyles } from '@/constants/theme';
 import EmptyState from '@/components/EmptyState/EmptyState';
 import Lesson from '@/components/Lesson/Lesson';
 import HorizontalDivider from '@/components/HorizontalDivider/HorizontalDivider';
+import { supabase } from '@/supabase';
 
-const mockData = [
-    {
-        id: 1,
-        name: 'Lesson 1',
-        description: 'Nice lesson',
-        duration: 5,
-    },
-    { id: 2, name: 'Lesson 2', description: 'Nice lesson' },
-    { id: 3, name: 'Lesson 3', description: 'Nice lesson' },
-];
+async function getData() {
+    const { data, error } = await supabase
+        .from('Lessons')
+        .select('*')
+        .order('order', {ascending: true});
+    return { data, error };
+}
 
 const Lessons = () => {
     const [search, setSearch] = useState('');
+    const [data, setData] = useState<any[]>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await getData();            
+            setData(res.data ?? []);
+        };
+        fetchData();
+    }, []);
     return (
         <SafeAreaView style={generalStyles.container}>
             <View style={styles.searchRow}>
@@ -32,7 +39,7 @@ const Lessons = () => {
             </View>
             <HorizontalDivider />
             <FlatList
-                data={mockData}
+                data={data}
                 renderItem={({ item }) => <Lesson {...item} />}
                 ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
                 ListEmptyComponent={() => (

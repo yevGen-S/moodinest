@@ -3,8 +3,8 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { generalStyles } from '@/constants/theme';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { supabase } from '@/supabase';
-import { dateFormat, MoodRecord } from '@/app/(tabs)/main';
+import { MoodRecord } from '@/constants/mood';
+import { dateFormat } from '@/constants/date';
 
 dayjs.extend(isoWeek);
 
@@ -17,7 +17,7 @@ type LastWeekCalendarProps = {
     setIsToday: (isToday: boolean) => void;
 };
 
-const getColorByMood = (mood: number) => {
+export const getColorByMood = (mood: number) => {
     switch (mood) {
         case 1:
             return 'rgba(233, 124, 124, 0.9)';
