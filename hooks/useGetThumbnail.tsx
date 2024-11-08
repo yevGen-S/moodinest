@@ -3,6 +3,7 @@ import * as VideoThumbnails from 'expo-video-thumbnails';
 
 const useGetThumbnail = (videoURL?: string) => {
     const [videoThumbnail, setVideoThumbnail] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const createThumbnail = async () => {
@@ -14,14 +15,16 @@ const useGetThumbnail = (videoURL?: string) => {
                     }
                 );
                 setVideoThumbnail(uri);
+                setIsLoading(false);
             } catch (error) {
                 console.error('Ошибка при создании миниатюры:', error);
+                setIsLoading(false);
             }
         };
         videoURL && createThumbnail();
     }, [videoURL]);
 
-    return { videoThumbnail, setVideoThumbnail };
+    return { videoThumbnail, setVideoThumbnail, isLoading };
 };
 
 export default useGetThumbnail;

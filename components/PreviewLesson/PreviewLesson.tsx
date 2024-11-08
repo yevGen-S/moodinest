@@ -8,6 +8,7 @@ import {
 import React from 'react';
 import useGetThumbnail from '@/hooks/useGetThumbnail';
 import { router } from 'expo-router';
+import { WithLoader } from '@/hoc/withLoader';
 
 export type PreviewLessonProps = {
     id: string;
@@ -22,7 +23,7 @@ const PreviewLesson = ({
     videoURL,
     thumbnail,
 }: PreviewLessonProps) => {
-    const { videoThumbnail } = useGetThumbnail(videoURL);
+    const { videoThumbnail, isLoading } = useGetThumbnail(videoURL);
 
     return (
         <View
@@ -35,53 +36,60 @@ const PreviewLesson = ({
                 gap: 15,
             }}
         >
-            <TouchableOpacity
-                style={{
-                    backgroundColor: '#EFEFF0',
-                    width: '100%',
-                    height: '100%',
-                    borderWidth: 2,
-                    borderColor: '#AFB1B6',
-                    borderRadius: 8,
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    alignItems: 'center',
-                }}
-                activeOpacity={0.7}
-                onPress={() =>
-                    router.navigate({
-                        pathname: '../(app)/meditation-card/[id]',
-                        params: { id, name, videoThumbnail },
-                    })
-                }
+            <WithLoader
+                size="small"
+                isLoading={!!videoURL && isLoading}
             >
-                {videoThumbnail && (
-                    <Image
-                        source={
-                            videoThumbnail ? { uri: videoThumbnail } : thumbnail
-                        }
-                        resizeMode="cover"
-                        style={{
-                            width: '100%',
-                            height: '100%',
-                            borderRadius: 6,
-                        }}
-                    />
-                )}
-                <Text
+                <TouchableOpacity
                     style={{
-                        position: 'absolute',
-                        bottom: 10,
-                        backgroundColor: '#8E8C8C',
-                        paddingHorizontal: 10,
-                        paddingVertical: 2,
-                        borderRadius: 16,
-                        color: '#ffffff',
+                        backgroundColor: '#EFEFF0',
+                        width: '100%',
+                        height: '100%',
+                        borderWidth: 2,
+                        borderColor: '#AFB1B6',
+                        borderRadius: 8,
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        alignItems: 'center',
                     }}
+                    activeOpacity={0.7}
+                    onPress={() =>
+                        router.navigate({
+                            pathname: '../(app)/meditation-card/[id]',
+                            params: { id, name, videoThumbnail },
+                        })
+                    }
                 >
-                    {name}
-                </Text>
-            </TouchableOpacity>
+                    {videoThumbnail && (
+                        <Image
+                            source={
+                                videoThumbnail
+                                    ? { uri: videoThumbnail }
+                                    : thumbnail
+                            }
+                            resizeMode="cover"
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                borderRadius: 6,
+                            }}
+                        />
+                    )}
+                    <Text
+                        style={{
+                            position: 'absolute',
+                            bottom: 10,
+                            backgroundColor: '#8E8C8C',
+                            paddingHorizontal: 10,
+                            paddingVertical: 2,
+                            borderRadius: 16,
+                            color: '#ffffff',
+                        }}
+                    >
+                        {name}
+                    </Text>
+                </TouchableOpacity>
+            </WithLoader>
         </View>
     );
 };

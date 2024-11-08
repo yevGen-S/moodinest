@@ -154,7 +154,12 @@ const Main = () => {
 
                     <CustomButton
                         showText="Подобрать медитацию"
-                        onPress={() => router.navigate('../(app)/suggestions')}
+                        onPress={() =>
+                            router.navigate({
+                                pathname: '../(app)/suggestions',
+                                params: { mood: moodData[currentDate.format(dateFormat)] },
+                            })
+                        }
                     />
                 </>
             </WithLoader>

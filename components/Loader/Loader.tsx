@@ -2,7 +2,7 @@ import { View, Image, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import React from 'react';
 import images from '@/constants/images';
 
-const Loader = () => {
+export const LoaderPage = () => {
     return (
         <View style={styles.container}>
             <Image
@@ -21,12 +21,27 @@ const Loader = () => {
     );
 };
 
+export const Loader = () => (
+    <View style={styles.smallLoader}>
+        <ActivityIndicator
+            color={'#E9AF78'}
+            size="large"
+        />
+    </View>
+);
+
 const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100%',
         backgroundColor: 'white',
+    },
+    smallLoader: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        width: '100%',
     },
     image: {
         width: 368,
@@ -38,5 +53,3 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
 });
-
-export default Loader;
