@@ -7,46 +7,57 @@ import EmptyState from '@/components/EmptyState/EmptyState';
 import Lesson from '@/components/Lesson/Lesson';
 import HorizontalDivider from '@/components/HorizontalDivider/HorizontalDivider';
 import { supabase } from '@/supabase';
+import { WithLoader } from '@/hoc/withLoader';
 
-async function getData() {
+async function getLessons() {
     const { data, error } = await supabase
         .from('Lessons')
         .select('*')
-        .order('order', {ascending: true});
+        .order('order', { ascending: true });
     return { data, error };
 }
 
 const Lessons = () => {
     const [search, setSearch] = useState('');
     const [data, setData] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await getData();            
-            setData(res.data ?? []);
+            try {
+                const res = await getLessons();
+                setData(res.data ?? []);
+                setIsLoading(false);
+            } catch (e) {
+                console.error(e);
+            }
         };
         fetchData();
     }, []);
     return (
         <SafeAreaView style={generalStyles.container}>
-            <View style={styles.searchRow}>
-                <SearchInput
-                    value={search}
-                    placeHolder={'Введите название'}
-                    onChangeText={setSearch}
-                    onSubmit={() => {}}
+            <WithLoader isLoading={isLoading}>
+                <View style={styles.searchRow}>
+                    <SearchInput
+                        value={search}
+                        placeHolder={'Введите название'}
+                        onChangeText={setSearch}
+                        onSubmit={() => {}}
+                    />
+                </View>
+                <HorizontalDivider />
+                <FlatList
+                    data={data}
+                    renderItem={({ item }) => <Lesson {...item} />}
+                    ItemSeparatorComponent={() => (
+                        <View style={{ height: 20 }} />
+                    )}
+                    ListEmptyComponent={() => (
+                        <EmptyState title="Уроки не найдены..." />
+                    )}
+                    showsVerticalScrollIndicator={false}
                 />
-            </View>
-            <HorizontalDivider />
-            <FlatList
-                data={data}
-                renderItem={({ item }) => <Lesson {...item} />}
-                ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-                ListEmptyComponent={() => (
-                    <EmptyState title="Уроки не найдены..." />
-                )}
-                showsVerticalScrollIndicator={false}
-            />
+            </WithLoader>
         </SafeAreaView>
     );
 };
