@@ -27,10 +27,10 @@ const Lessons = () => {
             try {
                 const res = await getLessons();
                 setData(res.data ?? []);
-                setIsLoading(false);
             } catch (e) {
                 console.error(e);
             }
+            setIsLoading(false);
         };
         fetchData();
     }, []);

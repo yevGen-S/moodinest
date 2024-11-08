@@ -38,11 +38,10 @@ const Suggestions = () => {
                     ...(data as PreviewLessonProps[]),
                     ...mockSuggestions,
                 ]);
-                setIsLoading(false);
             } catch (e) {
                 console.log(e);
-                setIsLoading(false);
             }
+            setIsLoading(false);
         };
 
         getData();

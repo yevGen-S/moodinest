@@ -51,7 +51,7 @@ const fetchMoodData = async (currentDate: dayjs.Dayjs) => {
 };
 
 const Main = () => {
-    const [currentDate, setCurrentDate] = useState(dayjs().subtract(2, 'day'));
+    const [currentDate, setCurrentDate] = useState(dayjs());
     const [moodData, setMoodData] = useState<MoodRecord>({});
     const [userID, setUserID] = useState<number>(0);
     const [pickedMood, setPickedMood] = useState<number>(0);
@@ -60,10 +60,14 @@ const Main = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const { moodData, userID } = await fetchMoodData(currentDate);
-            setMoodData(moodData);
-            setPickedMood(moodData[currentDate.toString()] ?? 0);
-            setUserID(userID);
+            try {
+                const { moodData, userID } = await fetchMoodData(currentDate);
+                setMoodData(moodData);
+                setPickedMood(moodData[currentDate.toString()] ?? 0);
+                setUserID(userID);
+            } catch (e) {
+                console.log(e);
+            }
             setIsLoading(false);
         };
 
@@ -157,7 +161,11 @@ const Main = () => {
                         onPress={() =>
                             router.navigate({
                                 pathname: '../(app)/suggestions',
-                                params: { mood: moodData[currentDate.format(dateFormat)] },
+                                params: {
+                                    mood: moodData[
+                                        currentDate.format(dateFormat)
+                                    ],
+                                },
                             })
                         }
                     />

@@ -11,15 +11,14 @@ const useGetThumbnail = (videoURL?: string) => {
                 const { uri } = await VideoThumbnails.getThumbnailAsync(
                     videoURL ?? '',
                     {
-                        time: 15000,
+                        time: 2000,
                     }
                 );
                 setVideoThumbnail(uri);
-                setIsLoading(false);
             } catch (error) {
                 console.error('Ошибка при создании миниатюры:', error);
-                setIsLoading(false);
             }
+            setIsLoading(false);
         };
         videoURL && createThumbnail();
     }, [videoURL]);
