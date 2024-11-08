@@ -1,4 +1,4 @@
-import { View, Image, Text, StyleSheet } from 'react-native';
+import { View, Image, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import React from 'react';
 import images from '@/constants/images';
 
@@ -10,7 +10,13 @@ const Loader = () => {
                 style={styles.image}
                 resizeMode="contain"
             />
-            <Text style={styles.title}>MoodiNest</Text>
+            <Text style={styles.title}>
+                MoodiNest{' '}
+                <ActivityIndicator
+                    color={'#E9AF78'}
+                    size="large"
+                />
+            </Text>
         </View>
     );
 };
@@ -29,6 +35,7 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: 'Work-Sans',
         fontSize: 50,
+        flexDirection: 'row',
     },
 });
 
