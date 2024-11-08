@@ -12,6 +12,7 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import { router } from 'expo-router';
 import { dateFormat } from '@/constants/date';
 import { MoodRecord } from '@/constants/mood';
+import { WithLoader } from '@/hoc/withLoader';
 
 dayjs.extend(isoWeek);
 
@@ -55,6 +56,7 @@ const Main = () => {
     const [userID, setUserID] = useState<number>(0);
     const [pickedMood, setPickedMood] = useState<number>(0);
     const [isToday, setIsToday] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -62,6 +64,7 @@ const Main = () => {
             setMoodData(moodData);
             setPickedMood(moodData[currentDate.toString()] ?? 0);
             setUserID(userID);
+            setIsLoading(false);
         };
 
         fetchData();
@@ -127,30 +130,34 @@ const Main = () => {
                 gap: 25,
             }}
         >
-            <Text style={styles.logoText}>MoodiNest</Text>
-            <LastWeekCalendar
-                currentDate={currentDate}
-                setCurrentDate={setCurrentDate}
-                moodData={moodData}
-                setIsToday={setIsToday}
-            />
-            <Image
-                source={images.meditation}
-                style={styles.image}
-                resizeMode="cover"
-            />
+            <WithLoader isLoading={isLoading}>
+                <>
+                    <Text style={styles.logoText}>MoodiNest</Text>
+                    <LastWeekCalendar
+                        currentDate={currentDate}
+                        setCurrentDate={setCurrentDate}
+                        moodData={moodData}
+                        setIsToday={setIsToday}
+                    />
+                    <Image
+                        source={images.meditation}
+                        style={styles.image}
+                        resizeMode="cover"
+                    />
 
-            <MoodPicker
-                mood={moodData[currentDate.format(dateFormat)] ?? 0}
-                isToday={isToday}
-                insertMoodData={insertMoodData}
-                updateMoodData={updateMoodData}
-            />
+                    <MoodPicker
+                        mood={moodData[currentDate.format(dateFormat)] ?? 0}
+                        isToday={isToday}
+                        insertMoodData={insertMoodData}
+                        updateMoodData={updateMoodData}
+                    />
 
-            <CustomButton
-                showText="Подобрать медитацию"
-                onPress={() => router.navigate('../(app)/suggestions')}
-            />
+                    <CustomButton
+                        showText="Подобрать медитацию"
+                        onPress={() => router.navigate('../(app)/suggestions')}
+                    />
+                </>
+            </WithLoader>
         </SafeAreaView>
     );
 };

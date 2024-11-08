@@ -9,6 +9,7 @@ import smile from '../assets/images/smile.png';
 import smileColor from '../assets/images/smileColor.png';
 import happy from '../assets/images/happy.png';
 import happyColor from '../assets/images/happyColor.png';
+import loading from '../assets/images/loading.png'
 
 export default {
     meditation,
@@ -22,4 +23,5 @@ export default {
     smileColor,
     happy,
     happyColor,
+    loading
 };
