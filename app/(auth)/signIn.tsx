@@ -1,14 +1,25 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Form from '@/components/Form/Form';
 import LogoWithText from '@/components/LogoWithText/LogoWithText';
 import HorizontalDivider from '@/components/HorizontalDivider/HorizontalDivider';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import images from '@/constants/images';
+import { Session } from '@supabase/supabase-js';
 
-export default function SignIn() {
+export default function SignIn({ session }: { session: Session | null }) {
     const [isImageVisible, setIsImageVisible] = useState(true);
+
+    useEffect(() => {
+        if (session?.user.id) {
+            router.navigate({
+                pathname: '/(tabs)/main',
+                params: { userId: session?.user.id },
+            });
+        }
+    }, [session]);
+
     return (
         <SafeAreaView style={styles.container}>
             <LogoWithText />
@@ -20,7 +31,10 @@ export default function SignIn() {
                 />
             )}
 
-            <Form auth={'SignIn'} setIsImageVisible={setIsImageVisible} />
+            <Form
+                auth={'SignIn'}
+                setIsImageVisible={setIsImageVisible}
+            />
 
             <TouchableOpacity
                 onPress={() => router.navigate('../(auth)/signUp')}

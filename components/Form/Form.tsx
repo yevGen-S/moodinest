@@ -40,7 +40,10 @@ export const signUp = async ({ email, password }: authProps) => {
         Alert.alert('Проверьте почтовый ящик!');
         return;
     }
+
     router.navigate('../(auth)/signIn');
+
+    return session;
 };
 
 const Form = ({
@@ -103,7 +106,6 @@ const Form = ({
                     showText="Войти"
                     onPress={() => {
                         signIn({ email, password });
-                        router.navigate('/main');
                     }}
                     style={{ marginBottom: 10 }}
                 />
@@ -111,8 +113,14 @@ const Form = ({
             {auth === 'SignUp' && (
                 <CustomButton
                     showText="Создать аккаунт"
-                    onPress={() => {
-                        signUp({ email, password });
+                    onPress={async () => {
+                        const session = await signUp({ email, password });
+                        await supabase
+                            .from('Users')
+                            .upsert({
+                                id: session?.user.id,
+                                login: session?.user.email,
+                            });
                     }}
                     style={{ marginBottom: 10 }}
                 />

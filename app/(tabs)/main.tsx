@@ -13,16 +13,17 @@ import { router } from 'expo-router';
 import { dateFormat } from '@/constants/date';
 import { MoodRecord } from '@/constants/mood';
 import { WithLoader } from '@/hoc/withLoader';
+import { Session } from '@supabase/supabase-js';
 
 dayjs.extend(isoWeek);
 
 interface CalendarEntry {
-    userID: number;
+    userID: string;
     date: string;
     mood: number;
 }
 
-const fetchMoodData = async (currentDate: dayjs.Dayjs) => {
+const fetchMoodData = async (currentDate: dayjs.Dayjs, userID: string) => {
     const startOfWeek = currentDate.startOf('isoWeek').format(dateFormat);
     const endOfWeek = currentDate.endOf('isoWeek').format(dateFormat);
 
@@ -30,15 +31,14 @@ const fetchMoodData = async (currentDate: dayjs.Dayjs) => {
         await supabase
             .from('Calendar')
             .select('*')
+            .eq('userID', userID)
             .gte('date', startOfWeek)
             .lte('date', endOfWeek);
 
     if (error) {
         console.error(error);
-        return { moodData: {}, userID: 0 };
+        return { moodData: {}, userID: '' };
     }
-
-    const userID = data?.[0]?.userID || 0;
 
     return {
         moodData:
@@ -53,28 +53,37 @@ const fetchMoodData = async (currentDate: dayjs.Dayjs) => {
 const Main = () => {
     const [currentDate, setCurrentDate] = useState(dayjs());
     const [moodData, setMoodData] = useState<MoodRecord>({});
-    const [userID, setUserID] = useState<number>(0);
     const [pickedMood, setPickedMood] = useState<number>(0);
     const [isToday, setIsToday] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+    const [session, setSession] = useState<Session | null>(null);
 
     useEffect(() => {
-        const getMe = async () => {
-            const {
-                data: { user },
-            } = await supabase.auth.getUser();
-            console.log(user);
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session);
+        });
+        const { data: authListener } = supabase.auth.onAuthStateChange(
+            (_event, session) => {
+                setSession(session);
+            }
+        );
+        return () => {
+            authListener.subscription.unsubscribe();
         };
-        getMe();
     }, []);
 
     useEffect(() => {
         const fetchData = async () => {
+            setIsLoading(true);
             try {
-                const { moodData, userID } = await fetchMoodData(currentDate);
-                setMoodData(moodData);
-                setPickedMood(moodData[currentDate.toString()] ?? 0);
-                setUserID(userID);
+                if (session) {
+                    const { moodData } = await fetchMoodData(
+                        currentDate,
+                        session?.user.id
+                    );
+                    setMoodData(moodData);
+                    setPickedMood(moodData[currentDate.toString()] ?? 0);
+                }
             } catch (e) {
                 console.log(e);
             }
@@ -82,7 +91,7 @@ const Main = () => {
         };
 
         fetchData();
-    }, []);
+    }, [session]);
 
     const handleChangeMood = (mood: number) => {
         const prevMoodData = { ...moodData } as MoodRecord;
@@ -104,7 +113,7 @@ const Main = () => {
             .from('Calendar')
             .insert([
                 {
-                    userID: userID,
+                    userID: session?.user.id,
                     date: currentDate.format(dateFormat),
                     mood: mood,
                 },
@@ -124,7 +133,7 @@ const Main = () => {
         const { data, error } = await supabase
             .from('Calendar')
             .update({ mood: mood })
-            .eq('userID', userID)
+            .eq('userID', session?.user.id)
             .eq('date', currentDate.format(dateFormat))
             .select();
 
