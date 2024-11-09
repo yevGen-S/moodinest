@@ -28,10 +28,11 @@ const mockSuggestions = [
 const Suggestions = () => {
     const { mood } = useLocalSearchParams();
     const [data, setData] = useState<PreviewLessonProps[]>(mockSuggestions);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const getData = async () => {
+            setIsLoading(true);
             try {
                 const { data } = await getMeditationsSuggestions(+mood);
                 setData([
