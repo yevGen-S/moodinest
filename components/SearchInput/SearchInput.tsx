@@ -15,6 +15,7 @@ type SearchInputProps = {
     activateFilters?: () => void;
     onChangeText?: (text: string) => void;
     onSubmit?: (event: GestureResponderEvent) => void;
+
 };
 
 const SearchInput = ({
@@ -22,6 +23,7 @@ const SearchInput = ({
     placeHolder,
     onChangeText,
     onSubmit,
+    activateFilters,
 }: SearchInputProps) => {
     return (
         <View style={styles.sBlock}>
@@ -43,7 +45,7 @@ const SearchInput = ({
                 </TouchableOpacity>
             </View>
 
-            <TouchableOpacity style={styles.filter}>
+            <TouchableOpacity onPress={activateFilters} style={styles.filter}>
                 <Image
                     style={styles.fIcon}
                     source={icons.filter}
