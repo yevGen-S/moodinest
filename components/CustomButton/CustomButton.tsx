@@ -11,11 +11,11 @@ export type CustomButtonProps = {
     showText: string;
 } & TouchableOpacityProps;
 
-const CustomButton = ({ showText, ...props }: CustomButtonProps) => {
+const CustomButton = ({ showText, style, ...props }: CustomButtonProps) => {
     return (
         <TouchableOpacity
             {...props}
-            style={styles.btn}
+            style={[styles.btn, style]}
             activeOpacity={0.8}
         >
             <Text style={styles.btnText}>{showText}</Text>
