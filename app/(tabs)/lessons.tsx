@@ -1,4 +1,11 @@
-import { FlatList, StyleSheet, View, TouchableOpacity, Text, LayoutAnimation } from 'react-native';
+import {
+    FlatList,
+    StyleSheet,
+    View,
+    TouchableOpacity,
+    Text,
+    LayoutAnimation,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchInput from '@/components/SearchInput/SearchInput';
@@ -7,10 +14,10 @@ import EmptyState from '@/components/EmptyState/EmptyState';
 import Lesson from '@/components/Lesson/Lesson';
 import HorizontalDivider from '@/components/HorizontalDivider/HorizontalDivider';
 import { supabase } from '@/supabase';
+import { WithLoader } from '@/hoc/withLoader';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-
-async function getData() {
+async function getLessons() {
     const { data, error } = await supabase
         .from('Lessons')
         .select('*')
@@ -21,17 +28,28 @@ async function getData() {
 const Lessons = () => {
     const [search, setSearch] = useState('');
     const [data, setData] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+
     const [originalData, setOriginalData] = useState<any[]>([]);
-    const [activeFilter, setActiveFilter] = useState<'name' | 'duration' | 'date' | null>('name');
+    const [activeFilter, setActiveFilter] = useState<
+        'name' | 'duration' | 'date' | null
+    >('name');
     const [sortDirection, setSortDirection] = useState<boolean>(false); // Состояние направления сортировки (true - по убыванию, false - по возрастанию)
     const [shouldShowFilters, setShouldShowFilters] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await getData();
-            setData(res.data ?? []);
-            setOriginalData(res.data ?? []);
+            setIsLoading(true);
+            try {
+                const res = await getLessons();
+                setData(res.data ?? []);
+                setOriginalData(res.data ?? []);
+            } catch (e) {
+                console.error(e);
+            }
+            setIsLoading(false);
         };
+
         fetchData();
     }, []);
 
@@ -39,15 +57,15 @@ const Lessons = () => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setShouldShowFilters(true);
 
-        let newSortDirection = false; 
+        let newSortDirection = false;
 
         if (activeFilter === filterType) {
-            newSortDirection = !sortDirection; 
+            newSortDirection = !sortDirection;
         } else {
-            setActiveFilter(filterType); 
+            setActiveFilter(filterType);
         }
 
-        setSortDirection(newSortDirection); 
+        setSortDirection(newSortDirection);
 
         let sortedData = [...data];
         switch (filterType) {
@@ -55,16 +73,24 @@ const Lessons = () => {
                 sortedData.sort((a, b) => {
                     const nameA = a.name.toUpperCase();
                     const nameB = b.name.toUpperCase();
-                    return newSortDirection ? nameB.localeCompare(nameA) : nameA.localeCompare(nameB); 
+                    return newSortDirection
+                        ? nameB.localeCompare(nameA)
+                        : nameA.localeCompare(nameB);
                 });
                 break;
             case 'duration':
-                sortedData.sort((a, b) => (newSortDirection ? b.duration - a.duration : a.duration - b.duration)); 
+                sortedData.sort((a, b) =>
+                    newSortDirection
+                        ? b.duration - a.duration
+                        : a.duration - b.duration
+                );
             case 'date':
                 sortedData.sort((a, b) => {
                     const dateA = new Date(a.created_at);
                     const dateB = new Date(b.created_at);
-                    return newSortDirection ? dateB.getTime() - dateA.getTime() : dateA.getTime() - dateB.getTime();
+                    return newSortDirection
+                        ? dateB.getTime() - dateA.getTime()
+                        : dateA.getTime() - dateB.getTime();
                 });
                 break;
         }
@@ -73,53 +99,101 @@ const Lessons = () => {
 
     const handleSearchChange = (text: string) => {
         setSearch(text);
-        const filteredData = originalData.filter(item => item.name.toLowerCase().includes(text.toLowerCase()));
+        const filteredData = originalData.filter((item) =>
+            item.name.toLowerCase().includes(text.toLowerCase())
+        );
         setData(filteredData);
     };
 
-
     return (
         <SafeAreaView style={generalStyles.container}>
-            <View style={styles.searchRow}>
-                <SearchInput
-                    activateFilters={() => {
-                        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-                        setShouldShowFilters(!shouldShowFilters);
-                    }}
-                    value={search}
-                    placeHolder={'Введите название'}
-                    onChangeText={handleSearchChange}
-                />
-            </View>
-            {shouldShowFilters && (<View style={styles.filterButtons}>
-                    <TouchableOpacity style={styles.filterButton} onPress={() => handleFilter('name')}>
-                        <Text>По имени</Text>
-                        {activeFilter === 'name' && (
-                            <Icon style={styles.filterIconButton} name={sortDirection ? 'chevron-down-outline' : 'chevron-up-outline'} size={20} />
-                        )}
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.filterButton} onPress={() => handleFilter('duration')}>
-                        <Text>По длительности</Text>
-                        {activeFilter === 'duration' && (
-                            <Icon style={styles.filterIconButton} name={sortDirection ? 'chevron-down-outline' : 'chevron-up-outline'} size={20} />
-                        )}
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.filterButton} onPress={() => handleFilter('date')}>
-                        <Text>По дате</Text>
-                        {activeFilter === 'date' && (
-                            <Icon style={styles.filterIconButton} name={sortDirection ? 'chevron-down-outline' : 'chevron-up-outline'} size={20} />
-                        )}
-                    </TouchableOpacity>
+            <WithLoader isLoading={isLoading}>
+                <View style={styles.searchRow}>
+                    <SearchInput
+                        activateFilters={() => {
+                            LayoutAnimation.configureNext(
+                                LayoutAnimation.Presets.easeInEaseOut
+                            );
+                            setShouldShowFilters(!shouldShowFilters);
+                        }}
+                        value={search}
+                        placeHolder={'Введите название'}
+                        onChangeText={handleSearchChange}
+                    />
                 </View>
-            )}
-            <HorizontalDivider />
-            <FlatList
-                data={data}
-                renderItem={({ item }) => <Lesson key={item.id + item.duration} {...item} />}
-                ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-                ListEmptyComponent={() => <EmptyState title="Уроки не найдены..." />}
-                showsVerticalScrollIndicator={false}
-            />
+                {shouldShowFilters && (
+                    <View style={styles.filterButtons}>
+                        <TouchableOpacity
+                            style={styles.filterButton}
+                            onPress={() => handleFilter('name')}
+                        >
+                            <Text>По имени</Text>
+                            {activeFilter === 'name' && (
+                                <Icon
+                                    style={styles.filterIconButton}
+                                    name={
+                                        sortDirection
+                                            ? 'chevron-down-outline'
+                                            : 'chevron-up-outline'
+                                    }
+                                    size={20}
+                                />
+                            )}
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.filterButton}
+                            onPress={() => handleFilter('duration')}
+                        >
+                            <Text>По длительности</Text>
+                            {activeFilter === 'duration' && (
+                                <Icon
+                                    style={styles.filterIconButton}
+                                    name={
+                                        sortDirection
+                                            ? 'chevron-down-outline'
+                                            : 'chevron-up-outline'
+                                    }
+                                    size={20}
+                                />
+                            )}
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.filterButton}
+                            onPress={() => handleFilter('date')}
+                        >
+                            <Text>По дате</Text>
+                            {activeFilter === 'date' && (
+                                <Icon
+                                    style={styles.filterIconButton}
+                                    name={
+                                        sortDirection
+                                            ? 'chevron-down-outline'
+                                            : 'chevron-up-outline'
+                                    }
+                                    size={20}
+                                />
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                )}
+                <HorizontalDivider />
+                <FlatList
+                    data={data}
+                    renderItem={({ item }) => (
+                        <Lesson
+                            key={item.id + item.duration}
+                            {...item}
+                        />
+                    )}
+                    ItemSeparatorComponent={() => (
+                        <View style={{ height: 20 }} />
+                    )}
+                    ListEmptyComponent={() => (
+                        <EmptyState title="Уроки не найдены..." />
+                    )}
+                    showsVerticalScrollIndicator={false}
+                />
+            </WithLoader>
         </SafeAreaView>
     );
 };
@@ -151,7 +225,7 @@ const styles = StyleSheet.create({
     },
     filterIconButton: {
         paddingTop: 3,
-    }
+    },
 });
 
 export default Lessons;
