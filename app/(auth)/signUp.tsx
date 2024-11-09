@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import Form from '@/components/Form/Form';
 import LogoWithText from '@/components/LogoWithText/LogoWithText';
 import HorizontalDivider from '@/components/HorizontalDivider/HorizontalDivider';
@@ -8,16 +8,23 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import images from '@/constants/images';
 
 export default function SignUp() {
+    const [isImageVisible, setIsImageVisible] = useState(true);
+
     return (
         <SafeAreaView style={styles.container}>
             <LogoWithText />
             <HorizontalDivider />
-            <Image
-                source={images.signUp}
-                style={{ height: 317, width: 317 }}
-            />
+            {isImageVisible && (
+                <Image
+                    source={images.signUp}
+                    style={{ height: 317, width: 317 }}
+                />
+            )}
 
-            <Form auth={'SignUp'} />
+            <Form
+                auth={'SignUp'}
+                setIsImageVisible={setIsImageVisible}
+            />
 
             <TouchableOpacity
                 onPress={() => router.navigate('../(auth)/signIn')}

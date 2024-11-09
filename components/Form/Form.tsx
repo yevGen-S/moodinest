@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, LayoutAnimation, StyleSheet, View } from 'react-native';
 import React, { useState } from 'react';
 import { Input } from '@rneui/themed';
 import CustomButton from '../CustomButton/CustomButton';
@@ -43,7 +43,13 @@ export const signUp = async ({ email, password }: authProps) => {
     router.navigate('../(auth)/signIn');
 };
 
-const Form = ({ auth }: { auth: 'SignIn' | 'SignUp' }) => {
+const Form = ({
+    auth,
+    setIsImageVisible,
+}: {
+    auth: 'SignIn' | 'SignUp';
+    setIsImageVisible: (val: boolean) => void;
+}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -56,6 +62,18 @@ const Form = ({ auth }: { auth: 'SignIn' | 'SignUp' }) => {
                     value={email}
                     placeholder="E-mail / Логин"
                     autoCapitalize={'none'}
+                    onFocus={() => {
+                        LayoutAnimation.configureNext(
+                            LayoutAnimation.Presets.easeInEaseOut
+                        );
+                        setIsImageVisible(false);
+                    }}
+                    onBlur={() => {
+                        LayoutAnimation.configureNext(
+                            LayoutAnimation.Presets.easeInEaseOut
+                        );
+                        setIsImageVisible(true);
+                    }}
                 />
             </View>
             <View style={[styles.verticallySpaced]}>
@@ -66,6 +84,18 @@ const Form = ({ auth }: { auth: 'SignIn' | 'SignUp' }) => {
                     secureTextEntry={true}
                     placeholder="Пароль"
                     autoCapitalize={'none'}
+                    onFocus={() => {
+                        LayoutAnimation.configureNext(
+                            LayoutAnimation.Presets.easeInEaseOut
+                        );
+                        setIsImageVisible(false);
+                    }}
+                    onBlur={() => {
+                        LayoutAnimation.configureNext(
+                            LayoutAnimation.Presets.easeInEaseOut
+                        );
+                        setIsImageVisible(true);
+                    }}
                 />
             </View>
             {auth === 'SignIn' && (
@@ -73,6 +103,7 @@ const Form = ({ auth }: { auth: 'SignIn' | 'SignUp' }) => {
                     showText="Войти"
                     onPress={() => {
                         signIn({ email, password });
+                        router.navigate('/main');
                     }}
                     style={{ marginBottom: 10 }}
                 />

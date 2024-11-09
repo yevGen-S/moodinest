@@ -59,6 +59,16 @@ const Main = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        const getMe = async () => {
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+            console.log(user);
+        };
+        getMe();
+    }, []);
+
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 const { moodData, userID } = await fetchMoodData(currentDate);
