@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { generalStyles } from '@/constants/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
-import { getColorByMood } from '@/components/LastWeekCalendar/LastWeekCalendar';
 import { supabase } from '@/supabase';
 import { WithLoader } from '@/hoc/withLoader';
 import { MoodIcon } from '@/components/MoodPicker/MoodPicker';
@@ -57,12 +56,6 @@ LocaleConfig.locales['ru'] = {
 };
 
 LocaleConfig.defaultLocale = 'ru';
-
-// const mockCalendar: CalendarDataType = {
-//     '2024-10-10': { marked: true, dotColor: getColorByMood(1) },
-//     '2024-10-12': { marked: true, dotColor: getColorByMood(5) },
-//     '2024-10-18': { marked: true, dotColor: getColorByMood(2) },
-// };
 
 const getCalendar = async () => {
     let { data, error } = await supabase.from('Calendar').select('date, mood');
