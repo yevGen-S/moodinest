@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { generalStyles } from '@/constants/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Calendar } from 'react-native-calendars';
+import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { getColorByMood } from '@/components/LastWeekCalendar/LastWeekCalendar';
 import { supabase } from '@/supabase';
 import { WithLoader } from '@/hoc/withLoader';
@@ -11,6 +11,50 @@ type CalendarResponseType = {
     date: string;
     mood: number;
 };
+
+LocaleConfig.locales['ru'] = {
+    monthNames: [
+        'Январь',
+        'Февраль',
+        'Март',
+        'Апрель',
+        'Май',
+        'Июнь',
+        'Июль',
+        'Август',
+        'Сентябрь',
+        'Октябрь',
+        'Ноябрь',
+        'Декабрь',
+    ],
+    monthNamesShort: [
+        'Янв.',
+        'Февр.',
+        'Март',
+        'Апр.',
+        'Май',
+        'Июнь',
+        'Июль',
+        'Авг.',
+        'Сент.',
+        'Окт.',
+        'Нояб.',
+        'Дек.',
+    ],
+    dayNames: [
+        'Воскресенье',
+        'Понедельник',
+        'Вторник',
+        'Среда',
+        'Четверг',
+        'Пятница',
+        'Суббота',
+    ],
+    dayNamesShort: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+    today: 'Сегодня',
+};
+
+LocaleConfig.defaultLocale = 'ru';
 
 const mockCalendar: CalendarDataType = {
     '2024-10-10': { marked: true, dotColor: getColorByMood(1) },
