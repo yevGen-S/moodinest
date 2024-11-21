@@ -19,11 +19,11 @@ interface MoodPickerProps {
 }
 
 export const MoodIcon: Record<number, ImageProps> = {
-    1: images.crying,
-    2: images.sadFace,
-    3: images.neutral,
-    4: images.smile,
-    5: images.happy,
+    1: images.cryingColor,
+    2: images.sadFaceColor,
+    3: images.neutralColor,
+    4: images.smileColor,
+    5: images.happyColor,
 };
 
 const MoodPicker: React.FC<MoodPickerProps> = ({
