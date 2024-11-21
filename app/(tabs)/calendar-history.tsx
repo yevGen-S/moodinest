@@ -149,7 +149,6 @@ const styles = StyleSheet.create({
     iconStyle: {
         width: 20,
         height: 20,
-        marginTop: 3,
-        marginLeft: 15,
+        marginLeft: 20,
     },
 });
