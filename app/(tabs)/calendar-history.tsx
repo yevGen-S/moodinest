@@ -48,7 +48,6 @@ const CalendarHistory = () => {
                 return;
             }
             if (data) {
-                console.log(data);
                 setCalendar(adaptCalendarData(data));
                 setIsLoading(false);
             }
