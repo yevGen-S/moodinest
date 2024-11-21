@@ -23,7 +23,7 @@ export const TabIcon = ({ icon, color, name }: TabIconProps) => {
                     width: 28,
                     height: 28,
                     marginBottom: 5,
-                    marginTop: 10,
+                    marginTop: 6,
                 }}
             />
             <Text
