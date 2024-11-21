@@ -6,8 +6,9 @@ import { Text, View } from 'react-native';
 import HorizontalDivider from '@/components/HorizontalDivider/HorizontalDivider';
 import CustomButton from '@/components/CustomButton/CustomButton';
 import Rate from '@/components/Rate/Rate';
+import { WithLoader } from '@/hoc/withLoader';
 
-async function getMeditationById(id: string) {
+async function getMeditationById(id: number) {
     const { data, error } = await supabase
         .from('Lessons')
         .select('*')
@@ -18,45 +19,51 @@ async function getMeditationById(id: string) {
 const MeditationCard = () => {
     const { id } = useLocalSearchParams();
     const [data, setData] = useState<LessonProps | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const getData = async () => {
-            const { data } = await getMeditationById(id as string);
+            setIsLoading(true);
+            const { data } = await getMeditationById(+id);
             setData(data?.[0] as LessonProps);
+            setIsLoading(false);
         };
         getData();
     }, [id]);
+
     return (
-        <View style={{ alignItems: 'center' }}>
-            <Text
-                style={{
-                    fontFamily: 'Work-Sans',
-                    fontSize: 24,
-                    width: '80%',
-                    flexWrap: 'wrap',
-                    textAlign: 'center',
-                    marginBottom: 20,
-                    marginTop: 40,
-                }}
-            >
-                {data?.name}
-            </Text>
-            {data && <Lesson {...data} />}
-            <HorizontalDivider />
-            <View
-                style={{
-                    marginBottom: 40,
-                    width: '100%',
-                    alignItems: 'center',
-                }}
-            >
-                <CustomButton showText="Смотреть позже" />
+        <WithLoader isLoading={isLoading}>
+            <View style={{ alignItems: 'center' }}>
+                <Text
+                    style={{
+                        fontFamily: 'Work-Sans',
+                        fontSize: 24,
+                        width: '80%',
+                        flexWrap: 'wrap',
+                        textAlign: 'center',
+                        marginBottom: 20,
+                        marginTop: 40,
+                    }}
+                >
+                    {data?.name}
+                </Text>
+                {data && <Lesson {...data} />}
+                <HorizontalDivider />
+                <View
+                    style={{
+                        marginBottom: 40,
+                        width: '100%',
+                        alignItems: 'center',
+                    }}
+                >
+                    <CustomButton showText="Смотреть позже" />
+                </View>
+                <Rate />
+                <Text style={{ fontFamily: 'Work-Sans', color: '#AFB1B6' }}>
+                    Оцените видео
+                </Text>
             </View>
-            <Rate />
-            <Text style={{ fontFamily: 'Work-Sans', color: '#AFB1B6' }}>
-                Оцените видео
-            </Text>
-        </View>
+        </WithLoader>
     );
 };
 
