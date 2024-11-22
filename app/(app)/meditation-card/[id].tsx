@@ -6,6 +6,7 @@ import { Text, View } from 'react-native';
 import HorizontalDivider from '@/components/HorizontalDivider/HorizontalDivider';
 import CustomButton from '@/components/CustomButton/CustomButton';
 import Rate from '@/components/Rate/Rate';
+import { Session } from '@supabase/supabase-js';
 
 async function getMeditationById(id: string) {
     const { data, error } = await supabase
@@ -15,9 +16,46 @@ async function getMeditationById(id: string) {
     return { data, error };
 }
 
+async function isLessonWatchLater(userID: string, lessonID: string) {
+    const { data, error } = await supabase
+        .from('WatchLater')
+        .select('*')
+        .eq('userID', userID)
+        .eq('lessonID', +lessonID)
+        .single();
+
+    if (error) {
+        if (error.details === "The result contains 0 rows") {
+            console.log(error.details);
+        } else {
+            console.error('Error checking favorite lesson:', error);
+        }
+        return false;
+    }
+
+    return data !== null;
+}
+
 const MeditationCard = () => {
-    const { id } = useLocalSearchParams();
+    const { id } = useLocalSearchParams()  as { id: string };
     const [data, setData] = useState<LessonProps | null>(null);
+    const [isPressLater, setIsPressLater] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [session, setSession] = useState<Session | null>(null);
+
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session);
+        });
+        const { data: authListener } = supabase.auth.onAuthStateChange(
+            (_event, session) => {
+                setSession(session);
+            }
+        );
+        return () => {
+            authListener.subscription.unsubscribe();
+        };
+    }, []);
 
     useEffect(() => {
         const getData = async () => {
@@ -26,6 +64,53 @@ const MeditationCard = () => {
         };
         getData();
     }, [id]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true);
+            try {
+                if (session) {
+                    const watchedlater = (await isLessonWatchLater(
+                        session?.user.id,
+                        id
+                    ));
+                    setIsPressLater(watchedlater);
+                    console.log(id);
+                    console.log(session?.user.id);
+                    console.log(watchedlater);
+                    console.log('WL', isPressLater);
+                }
+            } catch (e) {
+                console.log(e);
+            }
+            setIsLoading(false);
+        };
+
+        fetchData();
+    }, [session])
+
+    const insertWatchLater = async () => {
+        const { data, error } = await supabase
+            .from('WatchLater')
+            .insert([
+                {
+                    userID: session?.user.id,
+                    lessonID: id,
+                },
+            ])
+
+        if (error) {
+            console.error('Error inserting lesson for watching later:', error);
+        } else {
+            console.log('Inserted lesson for watching later:', data);
+        }
+    };
+
+    const handleWatchLater = () => {
+        setIsPressLater(true);
+        insertWatchLater();
+    };
+
     return (
         <View style={{ alignItems: 'center' }}>
             <Text
@@ -43,15 +128,30 @@ const MeditationCard = () => {
             </Text>
             {data && <Lesson {...data} />}
             <HorizontalDivider />
-            <View
-                style={{
-                    marginBottom: 40,
-                    width: '100%',
-                    alignItems: 'center',
-                }}
-            >
-                <CustomButton showText="Смотреть позже" />
-            </View>
+            {isPressLater 
+                ? ( <Text
+                        style={{
+                            fontFamily: 'Work-Sans',
+                            fontSize: 20,
+                            width: '80%',
+                            flexWrap: 'wrap',
+                            textAlign: 'center',
+                            marginBottom: 40,
+                        }}
+                    >
+                        Вы можете вернуться к видео у себя в профиле!
+                    </Text>)
+                : ( <View
+                        style={{
+                            marginBottom: 40,
+                            width: '100%',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <CustomButton showText="Смотреть позже" onPress={() => handleWatchLater()}/>
+                    </View>
+                )
+            }
             <Rate />
             <Text style={{ fontFamily: 'Work-Sans', color: '#AFB1B6' }}>
                 Оцените видео
