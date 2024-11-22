@@ -13,7 +13,7 @@ import { Video, ResizeMode } from 'expo-av';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import useGetThumbnail from '@/hooks/useGetThumbnail';
 
-type VideoCardProps = {
+export type VideoCardProps = {
     play: boolean;
     onPress: () => void;
     setPlay: (value: boolean) => void;

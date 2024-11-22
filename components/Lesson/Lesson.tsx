@@ -1,7 +1,13 @@
-import { ImageURISource, StyleSheet, Text, View } from 'react-native';
+import {
+    ImageURISource,
+    StyleProp,
+    StyleSheet,
+    Text,
+    View,
+} from 'react-native';
 import React, { useState } from 'react';
 import { generalStyles } from '@/constants/theme';
-import VideoCard from './VideoCard';
+import VideoCard, { VideoCardProps } from './VideoCard';
 
 export type LessonProps = {
     videoURL: string;
@@ -10,6 +16,8 @@ export type LessonProps = {
     description?: string;
     isFavourite?: boolean;
     duration?: number;
+    videoCardStyle?: StyleProp<any>;
+    onPress?: VideoCardProps['onPress'];
 };
 
 const Lesson = ({
@@ -19,15 +27,17 @@ const Lesson = ({
     description,
     isFavourite,
     duration,
+    onPress,
+    videoCardStyle,
 }: LessonProps) => {
     const [play, setPlay] = useState(false);
     return (
-        <View style={styles.container}>
+        <View style={{ ...styles.container, ...videoCardStyle }}>
             <VideoCard
                 videoURL={videoURL}
                 thubnail={thubnail}
                 play={play}
-                onPress={() => setPlay(true)}
+                onPress={() => (onPress ? onPress() : setPlay(true))}
                 setPlay={setPlay}
                 duration={duration}
                 isFavourite={isFavourite}
