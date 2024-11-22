@@ -21,14 +21,18 @@ type VideoCardProps = {
     thubnail?: ImageURISource;
     duration?: number;
     isFavourite?: boolean;
+    insertFavoriteLesson: () => void;
+    deleteFavoriteLesson: () => void;
 };
 
 const VideoCard = ({
     play,
     onPress,
     duration,
-    isFavourite = false,
+    isFavourite,
     videoURL,
+    insertFavoriteLesson,
+    deleteFavoriteLesson,
 }: VideoCardProps) => {
     const videoRef = useRef<Video | null>(null);
     const { videoThumbnail } = useGetThumbnail(videoURL);
@@ -66,6 +70,14 @@ const VideoCard = ({
             subscription.remove();
         };
     }, []);
+
+    const handleFavoriteLessonChange = () => {
+        if (isFavourite) {
+            deleteFavoriteLesson();
+        } else {
+            insertFavoriteLesson();
+        }
+    };
 
     return (
         <>
@@ -107,13 +119,9 @@ const VideoCard = ({
                             </Text>
                         </View>
                     )}
-                    <TouchableOpacity style={styles.bookmarkView}>
+                    <TouchableOpacity style={styles.bookmarkView} onPress={() => handleFavoriteLessonChange()}>
                         <Image
-                            style={
-                                isFavourite
-                                    ? styles.bookmarkIcon
-                                    : styles.bookmarkIcon
-                            }
+                            style={styles.bookmarkIcon}
                             tintColor={isFavourite ? 'yellow' : '#FFFFFF'}
                             source={icons.bookmark}
                             resizeMode="contain"
@@ -142,6 +150,7 @@ const styles = StyleSheet.create({
     thubnail: {
         width: '100%',
         height: '100%',
+        borderRadius: 6,
     },
     playIcon: {
         width: 24,
