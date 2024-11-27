@@ -67,6 +67,7 @@ const Suggestions = () => {
                         flexWrap: 'wrap',
                         textAlign: 'center',
                         marginBottom: 50,
+                        marginTop: 15,
                     }}
                 >
                     Медитации, подходящие вашему настроению:
