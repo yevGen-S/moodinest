@@ -5,28 +5,47 @@ import { generalStyles } from '@/constants/theme';
 import CustomButton from '@/components/CustomButton/CustomButton';
 import { supabase } from '@/supabase';
 import { router } from 'expo-router';
-import { Session } from '@supabase/supabase-js';
 import icons from '@/constants/icons';
 import HorizontalDivider from '@/components/HorizontalDivider/HorizontalDivider';
 import HorizontalNamedLessonsList from '@/components/HorizontalNamedLessonsList/HorizontalNamedLessonsList';
 import { useIsFocused } from '@react-navigation/native';
+import { Session } from '@supabase/supabase-js';
+
+const fetchFavouriteLessons = async (userId: string) => {
+    const { data, error } = await supabase
+        .from('FavoriteLessons')
+        .select('*, Lessons(id, name, description, duration, text, videoURL)')
+        .eq('userID', userId);
+
+    return { data, error };
+};
+
+const fetchWatchedLaterLessons = async (userId: string) => {
+    const { data, error } = await supabase
+        .from('WatchLater')
+        .select('*, Lessons(id, name, description, duration, text, videoURL)')
+        .eq('userID', userId);
+
+    return { data, error };
+};
 
 const Profile = () => {
     const [session, setSession] = useState<Session | null>(null);
     const isFocused = useIsFocused();
 
     useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-        });
-        const { data: authListener } = supabase.auth.onAuthStateChange(
-            (_event, session) => {
+        supabase.auth
+            .getSession()
+            .then(({ data: { session } }) => {
                 setSession(session);
-            }
-        );
-        return () => {
-            authListener.subscription.unsubscribe();
-        };
+                return session;
+            })
+            .then((session) => {
+                if (session) {
+                    fetchFavouriteLessons(session.user.id).then(console.log);
+                    fetchWatchedLaterLessons(session.user.id).then(console.log);
+                }
+            });
     }, [isFocused]);
 
     const signOut = async () => {
