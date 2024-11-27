@@ -1,16 +1,51 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { generalStyles } from '@/constants/theme';
-import PreviewLesson from '../PreviewLesson/PreviewLesson';
 import EmptyState from '../EmptyState/EmptyState';
 import Lesson from '../Lesson/Lesson';
 import { router } from 'expo-router';
 
 export type HorizontalNamedListProps = {
     name: string;
+    data?: any[];
 };
 
-const HorizontalNamedLessonsList = ({ name }: HorizontalNamedListProps) => {
+const mockData = [
+    {
+        videoURL: '',
+        name: 'Lesson 123',
+        isFavourite: false,
+        duration: 5,
+        description: 'awdawd',
+        id: 1,
+    },
+    {
+        videoURL: '',
+        name: 'Lesson 123',
+        isFavourite: false,
+        duration: 5,
+        id: 12,
+    },
+    {
+        videoURL: '',
+        name: 'Lesson 333',
+        isFavourite: false,
+        duration: 5,
+        id: 2,
+    },
+    {
+        videoURL: '',
+        name: 'Lesson 7',
+        isFavourite: false,
+        duration: 5,
+        id: 3,
+    },
+];
+
+const HorizontalNamedLessonsList = ({
+    name,
+    data = mockData,
+}: HorizontalNamedListProps) => {
     return (
         <View>
             <Text
@@ -23,37 +58,7 @@ const HorizontalNamedLessonsList = ({ name }: HorizontalNamedListProps) => {
                 {name}
             </Text>
             <FlatList
-                data={[
-                    {
-                        videoURL: '',
-                        name: 'Lesson 123',
-                        isFavourite: false,
-                        duration: 5,
-                        description: 'awdawd',
-                        id: 1,
-                    },
-                    {
-                        videoURL: '',
-                        name: 'Lesson 123',
-                        isFavourite: false,
-                        duration: 5,
-                        id: 12,
-                    },
-                    {
-                        videoURL: '',
-                        name: 'Lesson 333',
-                        isFavourite: false,
-                        duration: 5,
-                        id: 2,
-                    },
-                    {
-                        videoURL: '',
-                        name: 'Lesson 7',
-                        isFavourite: false,
-                        duration: 5,
-                        id: 3,
-                    },
-                ]}
+                data={data}
                 renderItem={({ item }) => (
                     <Lesson
                         videoCardStyle={{ width: 300 }}

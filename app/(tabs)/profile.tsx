@@ -1,4 +1,4 @@
-import { Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Image, ScrollView, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { generalStyles } from '@/constants/theme';
@@ -9,9 +9,11 @@ import { Session } from '@supabase/supabase-js';
 import icons from '@/constants/icons';
 import HorizontalDivider from '@/components/HorizontalDivider/HorizontalDivider';
 import HorizontalNamedLessonsList from '@/components/HorizontalNamedLessonsList/HorizontalNamedLessonsList';
+import { useIsFocused } from '@react-navigation/native';
 
 const Profile = () => {
     const [session, setSession] = useState<Session | null>(null);
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
@@ -25,7 +27,7 @@ const Profile = () => {
         return () => {
             authListener.subscription.unsubscribe();
         };
-    }, []);
+    }, [isFocused]);
 
     const signOut = async () => {
         Alert.alert('Подтвердите выход', 'Вы действительно хотите выйти?', [

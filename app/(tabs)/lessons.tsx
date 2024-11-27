@@ -16,6 +16,7 @@ import HorizontalDivider from '@/components/HorizontalDivider/HorizontalDivider'
 import { supabase } from '@/supabase';
 import { WithLoader } from '@/hoc/withLoader';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useIsFocused } from '@react-navigation/native';
 
 async function getLessons() {
     const { data, error } = await supabase
@@ -28,7 +29,7 @@ async function getLessons() {
 const Lessons = () => {
     const [search, setSearch] = useState('');
     const [data, setData] = useState<any[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const [originalData, setOriginalData] = useState<any[]>([]);
     const [activeFilter, setActiveFilter] = useState<
@@ -36,6 +37,7 @@ const Lessons = () => {
     >('name');
     const [sortDirection, setSortDirection] = useState<boolean>(false); // Состояние направления сортировки (true - по убыванию, false - по возрастанию)
     const [shouldShowFilters, setShouldShowFilters] = useState<boolean>(false);
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -51,7 +53,7 @@ const Lessons = () => {
         };
 
         fetchData();
-    }, []);
+    }, [isFocused]);
 
     const handleFilter = (filterType: 'name' | 'duration' | 'date') => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);

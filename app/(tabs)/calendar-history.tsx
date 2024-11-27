@@ -6,6 +6,7 @@ import { supabase } from '@/supabase';
 import { WithLoader } from '@/hoc/withLoader';
 import { MoodIcon } from '@/components/MoodPicker/MoodPicker';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 
 type CalendarDataType = Record<string, { mood: number; icon: any }>;
 type CalendarResponseType = {
@@ -76,7 +77,8 @@ const adaptCalendarData = (data: CalendarResponseType[]) => {
 
 const CalendarHistory = () => {
     const [calendar, setCalendar] = useState<CalendarDataType | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -93,7 +95,7 @@ const CalendarHistory = () => {
         };
 
         fetchData();
-    }, []);
+    }, [isFocused]);
 
     const renderDay = ({ date }: any) => {
         const dayData = calendar?.[date.dateString];
