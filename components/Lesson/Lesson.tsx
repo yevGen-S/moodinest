@@ -21,18 +21,13 @@ async function isLessonFavorited(lessonID: number, userID: string) {
         .select('*')
         .eq('lessonID', lessonID)
         .eq('userID', userID)
-        .single();
 
     if (error) {
-        if (error.details === "The result contains 0 rows") {
-            console.log(error.details);
-        } else {
             console.error('Error checking favorite lesson:', error);
-        }
         return false;
     }
 
-    return data !== null;
+    return data && data.length > 0;
 }
 
 const Lesson = ({
