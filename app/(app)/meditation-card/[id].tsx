@@ -16,24 +16,19 @@ async function getMeditationById(id: string) {
     return { data, error };
 }
 
-async function isLessonWatchLater(userID: string, lessonID: string) {
+async function isLessonWatchLater(userID: string, lessonID: number) {
     const { data, error } = await supabase
         .from('WatchLater')
         .select('*')
         .eq('userID', userID)
-        .eq('lessonID', +lessonID)
-        .single();
+        .eq('lessonID', lessonID)
 
     if (error) {
-        if (error.details === "The result contains 0 rows") {
-            console.log(error.details);
-        } else {
             console.error('Error checking favorite lesson:', error);
-        }
         return false;
     }
 
-    return data !== null;
+    return data && data.length > 0;
 }
 
 const MeditationCard = () => {
@@ -72,13 +67,9 @@ const MeditationCard = () => {
                 if (session) {
                     const watchedlater = (await isLessonWatchLater(
                         session?.user.id,
-                        id
+                        Number(id),
                     ));
                     setIsPressLater(watchedlater);
-                    console.log(id);
-                    console.log(session?.user.id);
-                    console.log(watchedlater);
-                    console.log('WL', isPressLater);
                 }
             } catch (e) {
                 console.log(e);
@@ -95,7 +86,7 @@ const MeditationCard = () => {
             .insert([
                 {
                     userID: session?.user.id,
-                    lessonID: id,
+                    lessonID: Number(id),
                 },
             ])
 
