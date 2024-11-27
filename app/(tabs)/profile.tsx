@@ -51,24 +51,33 @@ const Profile = () => {
         <SafeAreaView
             style={[
                 generalStyles.container,
-                { alignItems: 'center', gap: 20, width: '100%', padding: 20 },
+                {
+                    alignItems: 'center',
+                    width: '100%',
+                    paddingTop: 20,
+                },
             ]}
         >
             <Image
                 source={icons.avatar}
                 resizeMode="contain"
-                style={{ width: 56, height: 56 }}
+                style={{ width: 56, height: 56, marginBottom: 20 }}
             />
-            <Text style={{ ...generalStyles.font }}>
+            <Text style={{ ...generalStyles.font, marginBottom: 20 }}>
                 {session?.user?.email}
             </Text>
             <CustomButton
                 showText="Выйти"
                 onPress={signOut}
-                style={{ width: '60%' }}
+                style={{ width: '60%', marginBottom: 20 }}
             />
             <HorizontalDivider />
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                    padding: 20,
+                }}
+            >
                 <HorizontalNamedLessonsList name="Избранное" />
                 <View style={{ height: 20 }} />
                 <HorizontalNamedLessonsList name="Смотреть позже" />

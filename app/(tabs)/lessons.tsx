@@ -194,6 +194,9 @@ const Lessons = () => {
                         <EmptyState title="Уроки не найдены..." />
                     )}
                     showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{
+                        paddingVertical: 20,
+                    }}
                 />
             </WithLoader>
         </SafeAreaView>
