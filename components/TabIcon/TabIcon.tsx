@@ -11,7 +11,7 @@ export const TabIcon = ({ icon, color, name }: TabIconProps) => {
     return (
         <View
             style={{
-                display: 'flex',
+                height: '100%',
                 alignItems: 'center',
                 width: 60,
                 paddingTop: 20,
@@ -25,6 +25,7 @@ export const TabIcon = ({ icon, color, name }: TabIconProps) => {
                     width: 28,
                     height: 28,
                     marginBottom: 5,
+                    marginTop: 6,
                 }}
             />
             <Text
@@ -34,6 +35,7 @@ export const TabIcon = ({ icon, color, name }: TabIconProps) => {
                     fontWeight: 500,
                     lineHeight: 16,
                     textAlign: 'center',
+                    width: '100%',
                 }}
             >
                 {name}

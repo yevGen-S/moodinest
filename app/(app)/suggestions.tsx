@@ -5,7 +5,6 @@ import { supabase } from '@/supabase';
 import PreviewLesson, {
     PreviewLessonProps,
 } from '@/components/PreviewLesson/PreviewLesson';
-import images from '@/constants/images';
 import { WithLoader } from '@/hoc/withLoader';
 import { useLocalSearchParams } from 'expo-router';
 
@@ -18,16 +17,9 @@ const getMeditationsSuggestions = async (mood: number) => {
     return { data, error };
 };
 
-const mockSuggestions = [
-    { id: '1', name: 'Mock Meditation 1', thumbnail: images.meditation },
-    { id: '2', name: 'Mock Meditation 2' },
-    { id: '3', name: 'Mock Meditation 3' },
-    { id: '4', name: 'Mock Meditation 3' },
-];
-
 const Suggestions = () => {
     const { mood } = useLocalSearchParams();
-    const [data, setData] = useState<PreviewLessonProps[]>(mockSuggestions);
+    const [data, setData] = useState<PreviewLessonProps[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -35,10 +27,9 @@ const Suggestions = () => {
             setIsLoading(true);
             try {
                 const { data } = await getMeditationsSuggestions(+mood);
-                setData([
-                    ...(data as PreviewLessonProps[]),
-                    ...mockSuggestions,
-                ]);
+                setData(data as PreviewLessonProps[]);
+                console.log(data);
+                
             } catch (e) {
                 console.log(e);
             }

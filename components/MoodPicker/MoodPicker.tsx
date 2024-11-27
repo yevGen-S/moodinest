@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+    Image,
+    ImageProps,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import React from 'react';
 import HorizontalDivider from '../HorizontalDivider/HorizontalDivider';
 import { generalStyles } from '@/constants/theme';
@@ -10,6 +17,14 @@ interface MoodPickerProps {
     insertMoodData: (mood: number) => void;
     updateMoodData: (mood: number) => void;
 }
+
+export const MoodIcon: Record<number, ImageProps> = {
+    1: images.cryingColor,
+    2: images.sadFaceColor,
+    3: images.neutralColor,
+    4: images.smileColor,
+    5: images.happyColor,
+};
 
 const MoodPicker: React.FC<MoodPickerProps> = ({
     mood,
