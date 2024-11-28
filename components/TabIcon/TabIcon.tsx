@@ -13,6 +13,8 @@ export const TabIcon = ({ icon, color, name }: TabIconProps) => {
             style={{
                 height: '100%',
                 alignItems: 'center',
+                width: 60,
+                paddingTop: 20,
             }}
         >
             <Image
