@@ -1,9 +1,9 @@
 import {
     ImageURISource,
-    StyleProp,
     StyleSheet,
     Text,
     View,
+    ViewStyle,
 } from 'react-native';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
@@ -18,12 +18,12 @@ export type LessonProps = {
     name: string;
     description?: string;
     duration?: number;
-    videoCardStyle?: StyleProp<any>;
+    videoCardStyle?: ViewStyle;
     onPress?: VideoCardProps['onPress'];
     id: number;
 };
 
-const isLessonFavorited = async (lessonID: number, userID: string) => {
+const fetchIsLessonFavorite = async (lessonID: number, userID: string) => {
     const { data, error } = await supabase
         .from('FavoriteLessons')
         .select('*')
@@ -73,11 +73,11 @@ const Lesson = ({
                 setIsLoading(true);
                 try {
                     if (session) {
-                        const favourited = await isLessonFavorited(
+                        const favourite = await fetchIsLessonFavorite(
                             id,
                             session?.user.id
                         );
-                        setIsFavourite(favourited);
+                        setIsFavourite(favourite);
                     }
                 } catch (e) {
                     console.log(e);
@@ -121,7 +121,7 @@ const Lesson = ({
     };
 
     return (
-        <View style={{ ...styles.container, ...videoCardStyle }}>
+        <View style={[styles.container, videoCardStyle]}>
             <VideoCard
                 videoURL={videoURL}
                 thubnail={thubnail}

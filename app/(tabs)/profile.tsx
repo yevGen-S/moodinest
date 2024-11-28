@@ -14,24 +14,30 @@ import { Session } from '@supabase/supabase-js';
 const fetchFavouriteLessons = async (userId: string) => {
     const { data, error } = await supabase
         .from('FavoriteLessons')
-        .select('*, Lessons(id, name, description, duration, text, videoURL)')
+        .select(
+            'lessonID, userID, Lessons(id, name, description, duration, text)'
+        )
         .eq('userID', userId);
 
-    return { data, error };
+    return { data: data?.map((item) => item.Lessons), error };
 };
 
-const fetchWatchedLaterLessons = async (userId: string) => {
+const fetchWatchLaterLessons = async (userId: string) => {
     const { data, error } = await supabase
         .from('WatchLater')
-        .select('*, Lessons(id, name, description, duration, text, videoURL)')
+        .select(
+            'lessonID, userID, Lessons(id, name, description, duration, text)'
+        )
         .eq('userID', userId);
 
-    return { data, error };
+    return { data: data?.map((item) => item.Lessons), error };
 };
 
 const Profile = () => {
     const [session, setSession] = useState<Session | null>(null);
     const isFocused = useIsFocused();
+    const [favouriteLessons, setFavouriteLessons] = useState<any[]>([]);
+    const [watchLaterLessons, setWatchLaterLessons] = useState<any[]>([]);
 
     useEffect(() => {
         supabase.auth
@@ -42,8 +48,15 @@ const Profile = () => {
             })
             .then((session) => {
                 if (session) {
-                    fetchFavouriteLessons(session.user.id).then(console.log);
-                    fetchWatchedLaterLessons(session.user.id).then(console.log);
+                    fetchFavouriteLessons(session.user.id).then(({ data }) => {
+                        console.log(data);
+                        setFavouriteLessons(data ?? []);
+                    });
+
+                    fetchWatchLaterLessons(session.user.id).then(({ data }) => {
+                        console.log(data);
+                        setWatchLaterLessons(data ?? []);
+                    });
                 }
             });
     }, [isFocused]);
@@ -97,9 +110,15 @@ const Profile = () => {
                     padding: 20,
                 }}
             >
-                <HorizontalNamedLessonsList name="Избранное" />
+                <HorizontalNamedLessonsList
+                    data={favouriteLessons}
+                    name="Избранное"
+                />
                 <View style={{ height: 20 }} />
-                <HorizontalNamedLessonsList name="Смотреть позже" />
+                <HorizontalNamedLessonsList
+                    data={watchLaterLessons}
+                    name="Смотреть позже"
+                />
             </ScrollView>
         </SafeAreaView>
     );
