@@ -1,8 +1,14 @@
-import { ImageURISource, StyleSheet, Text, View } from 'react-native';
+import {
+    ImageURISource,
+    StyleSheet,
+    Text,
+    View,
+    ViewStyle,
+} from 'react-native';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { generalStyles } from '@/constants/theme';
-import VideoCard from './VideoCard';
+import VideoCard, { VideoCardProps } from './VideoCard';
 import { supabase } from '@/supabase';
 import { Session } from '@supabase/supabase-js';
 
@@ -12,23 +18,25 @@ export type LessonProps = {
     name: string;
     description?: string;
     duration?: number;
+    videoCardStyle?: ViewStyle;
+    onPress?: VideoCardProps['onPress'];
     id: number;
 };
 
-async function isLessonFavorited(lessonID: number, userID: string) {
+const fetchIsLessonFavorite = async (lessonID: number, userID: string) => {
     const { data, error } = await supabase
         .from('FavoriteLessons')
         .select('*')
         .eq('lessonID', lessonID)
-        .eq('userID', userID)
+        .eq('userID', userID);
 
     if (error) {
-            console.error('Error checking favorite lesson:', error);
+        console.error('Error checking favorite lesson:', error);
         return false;
     }
 
     return data && data.length > 0;
-}
+};
 
 const Lesson = ({
     videoURL,
@@ -36,6 +44,8 @@ const Lesson = ({
     name,
     description,
     duration,
+    onPress,
+    videoCardStyle,
     id,
 }: LessonProps) => {
     const [play, setPlay] = useState(false);
@@ -63,11 +73,11 @@ const Lesson = ({
                 setIsLoading(true);
                 try {
                     if (session) {
-                        const favourited = (await isLessonFavorited(
+                        const favourite = await fetchIsLessonFavorite(
                             id,
                             session?.user.id
-                        ));
-                        setIsFavourite(favourited);
+                        );
+                        setIsFavourite(favourite);
                     }
                 } catch (e) {
                     console.log(e);
@@ -80,14 +90,12 @@ const Lesson = ({
     );
 
     const insertFavoriteLesson = async () => {
-        const { data, error } = await supabase
-            .from('FavoriteLessons')
-            .insert([
-                {
-                    userID: session?.user.id,
-                    lessonID: id,
-                },
-            ])
+        const { data, error } = await supabase.from('FavoriteLessons').insert([
+            {
+                userID: session?.user.id,
+                lessonID: id,
+            },
+        ]);
 
         if (error) {
             console.error('Error inserting Favorite Lesson:', error);
@@ -113,12 +121,12 @@ const Lesson = ({
     };
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, videoCardStyle]}>
             <VideoCard
                 videoURL={videoURL}
                 thubnail={thubnail}
                 play={play}
-                onPress={() => setPlay(true)}
+                onPress={() => (onPress ? onPress() : setPlay(true))}
                 setPlay={setPlay}
                 duration={duration}
                 isFavourite={isFavourite}

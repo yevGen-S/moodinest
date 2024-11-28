@@ -47,7 +47,7 @@ const MoodPicker: React.FC<MoodPickerProps> = ({
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Как ваше настроение?</Text>
-            <HorizontalDivider />
+            <HorizontalDivider style={{ marginBottom: 20 }} />
             <View style={styles.picker}>
                 <TouchableOpacity
                     disabled={!isToday}

@@ -13,7 +13,7 @@ import { Video, ResizeMode } from 'expo-av';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import useGetThumbnail from '@/hooks/useGetThumbnail';
 
-type VideoCardProps = {
+export type VideoCardProps = {
     play: boolean;
     onPress: () => void;
     setPlay: (value: boolean) => void;
@@ -119,13 +119,25 @@ const VideoCard = ({
                             </Text>
                         </View>
                     )}
-                    <TouchableOpacity style={styles.bookmarkView} onPress={() => handleFavoriteLessonChange()}>
-                        <Image
-                            style={styles.bookmarkIcon}
-                            tintColor={isFavourite ? 'yellow' : '#FFFFFF'}
-                            source={icons.bookmark}
-                            resizeMode="contain"
-                        />
+                    <TouchableOpacity
+                        style={styles.bookmarkView}
+                        onPress={handleFavoriteLessonChange}
+                    >
+                        {isFavourite ? (
+                            <Image
+                                style={styles.bookmarkIcon}
+                                tintColor={'#FFFFFF'}
+                                source={icons.filledBookmark}
+                                resizeMode="contain"
+                            />
+                        ) : (
+                            <Image
+                                style={styles.bookmarkIcon}
+                                tintColor={'#FFFFFF'}
+                                source={icons.bookmark}
+                                resizeMode="contain"
+                            />
+                        )}
                     </TouchableOpacity>
                 </TouchableOpacity>
             )}
