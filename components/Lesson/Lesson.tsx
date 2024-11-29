@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     container: {
         width: '90%',
         gap: 15,
-        height: 278,
+        height: 284,
         borderWidth: 1,
         borderColor: '#EFEFF0',
         borderRadius: 12,
