@@ -9,9 +9,10 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 import icons from '@/constants/icons';
 import { StatusBar } from 'expo-status-bar';
-import { Video, ResizeMode } from 'expo-av';
+import { Video, ResizeMode, AVPlaybackStatus } from 'expo-av';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import useGetThumbnail from '@/hooks/useGetThumbnail';
+import FavoriteLesson from './FavoriteLesson';
 
 export type VideoCardProps = {
     play: boolean;
@@ -40,6 +41,8 @@ const VideoCard = ({
     const [currentResizeMode, setCurrentResizeMode] = useState<
         ResizeMode.COVER | ResizeMode.CONTAIN
     >(ResizeMode.COVER);
+
+    const [isPlaying, setIsPlaying] = useState(false);
 
     const handleOrientationChange = async () => {
         const orientation = await ScreenOrientation.getOrientationAsync();
@@ -71,6 +74,12 @@ const VideoCard = ({
         };
     }, []);
 
+    const handlePlaybackStatusUpdate = (status: AVPlaybackStatus) => {
+        if (status.isLoaded) {
+            setIsPlaying(status.isPlaying);
+        }
+    };
+
     const handleFavoriteLessonChange = () => {
         if (isFavourite) {
             deleteFavoriteLesson();
@@ -91,7 +100,15 @@ const VideoCard = ({
                         }}
                         useNativeControls
                         resizeMode={currentResizeMode}
+                        onPlaybackStatusUpdate={handlePlaybackStatusUpdate}
                     />
+                    {!isPlaying && (
+                        <FavoriteLesson
+                            isFavourite={isFavourite}
+                            handleFavoriteLessonChange={handleFavoriteLessonChange}
+                            play={play}
+                        />
+                    )}
                     <StatusBar style="auto" />
                 </>
             ) : (
@@ -119,26 +136,11 @@ const VideoCard = ({
                             </Text>
                         </View>
                     )}
-                    <TouchableOpacity
-                        style={styles.bookmarkView}
-                        onPress={handleFavoriteLessonChange}
-                    >
-                        {isFavourite ? (
-                            <Image
-                                style={styles.bookmarkIcon}
-                                tintColor={'#FFFFFF'}
-                                source={icons.filledBookmark}
-                                resizeMode="contain"
-                            />
-                        ) : (
-                            <Image
-                                style={styles.bookmarkIcon}
-                                tintColor={'#FFFFFF'}
-                                source={icons.bookmark}
-                                resizeMode="contain"
-                            />
-                        )}
-                    </TouchableOpacity>
+                    <FavoriteLesson
+                        isFavourite={isFavourite}
+                        handleFavoriteLessonChange={handleFavoriteLessonChange}
+                        play={play}
+                    />
                 </TouchableOpacity>
             )}
         </>
@@ -184,9 +186,5 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         bottom: 20,
         left: 10,
-    },
-    bookmarkIcon: {
-        width: 20,
-        height: 20,
     },
 });

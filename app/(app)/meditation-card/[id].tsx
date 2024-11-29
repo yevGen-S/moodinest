@@ -97,9 +97,27 @@ const MeditationCard = () => {
         }
     };
 
+    const deletetWatchLater = async () => {
+        const { data, error } = await supabase
+            .from('WatchLater')
+            .delete()
+            .eq('lessonID', Number(id))
+            .eq('userID', session?.user.id);
+
+        if (error) {
+            console.error('Error deleting lesson for watching later:', error);
+        } else {
+            console.log('Deleted lesson for watching later:', data);
+        }
+    };
+
     const handleWatchLater = () => {
-        setIsPressLater(true);
-        insertWatchLater();
+        setIsPressLater(!isPressLater);
+        if (isPressLater) {
+            deletetWatchLater();
+        } else {
+            insertWatchLater();
+        }
     };
 
     return (
@@ -119,30 +137,15 @@ const MeditationCard = () => {
             </Text>
             {data && <Lesson {...data} />}
             <HorizontalDivider />
-            {isPressLater 
-                ? ( <Text
-                        style={{
-                            fontFamily: 'Work-Sans',
-                            fontSize: 20,
-                            width: '80%',
-                            flexWrap: 'wrap',
-                            textAlign: 'center',
-                            marginBottom: 40,
-                        }}
-                    >
-                        Вы можете вернуться к видео у себя в профиле!
-                    </Text>)
-                : ( <View
-                        style={{
-                            marginBottom: 40,
-                            width: '100%',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <CustomButton showText="Смотреть позже" onPress={() => handleWatchLater()}/>
-                    </View>
-                )
-            }
+            <View
+                style={{
+                    marginBottom: 40,
+                    width: '100%',
+                    alignItems: 'center',
+                }}
+            >
+                <CustomButton showText={isPressLater ? "Убрать из просмотра позже" : "Смотреть позже"} onPress={() => handleWatchLater()}/>
+            </View>
             <Rate />
             <Text style={{ fontFamily: 'Work-Sans', color: '#AFB1B6' }}>
                 Оцените видео

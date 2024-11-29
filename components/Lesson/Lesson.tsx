@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
         borderColor: '#EFEFF0',
         borderRadius: 12,
         alignSelf: 'center',
-        justifyContent: 'center',
+        // justifyContent: 'center',
         alignItems: 'center',
         padding: 8,
     },

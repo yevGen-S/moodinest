@@ -61,7 +61,7 @@ const HorizontalNamedLessonsList = ({
                 data={data}
                 renderItem={({ item }) => (
                     <Lesson
-                        videoCardStyle={{ width: 300 }}
+                        videoCardStyle={{ width: 300, height: 295 }}
                         key={item.id}
                         onPress={() =>
                             router.navigate({

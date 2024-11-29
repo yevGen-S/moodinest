@@ -14,6 +14,7 @@ import { dateFormat } from '@/constants/date';
 import { MoodRecord } from '@/constants/mood';
 import { WithLoader } from '@/hoc/withLoader';
 import { Session } from '@supabase/supabase-js';
+import { useIsFocused } from '@react-navigation/native';
 
 dayjs.extend(isoWeek);
 
@@ -58,19 +59,13 @@ const Main = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [session, setSession] = useState<Session | null>(null);
 
+    const isFocused = useIsFocused();
+
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
             setSession(session);
         });
-        const { data: authListener } = supabase.auth.onAuthStateChange(
-            (_event, session) => {
-                setSession(session);
-            }
-        );
-        return () => {
-            authListener.subscription.unsubscribe();
-        };
-    }, []);
+    }, [isFocused]);
 
     useEffect(() => {
         const fetchData = async () => {
