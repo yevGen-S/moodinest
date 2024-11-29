@@ -137,30 +137,6 @@ const MeditationCard = () => {
             </Text>
             {data && <Lesson {...data} />}
             <HorizontalDivider />
-            {/* {isPressLater 
-                ? ( <Text
-                        style={{
-                            fontFamily: 'Work-Sans',
-                            fontSize: 20,
-                            width: '80%',
-                            flexWrap: 'wrap',
-                            textAlign: 'center',
-                            marginBottom: 40,
-                        }}
-                    >
-                        Вы можете вернуться к видео у себя в профиле!
-                    </Text>)
-                : ( <View
-                        style={{
-                            marginBottom: 40,
-                            width: '100%',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <CustomButton showText={isPressLater ? "Убрать из просмотра позже" : "Смотреть позже"} onPress={() => handleWatchLater()}/>
-                    </View>
-                )
-            } */}
             <View
                 style={{
                     marginBottom: 40,
