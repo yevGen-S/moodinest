@@ -58,8 +58,11 @@ LocaleConfig.locales['ru'] = {
 
 LocaleConfig.defaultLocale = 'ru';
 
-const getCalendar = async () => {
-    let { data, error } = await supabase.from('Calendar').select('date, mood');
+const getCalendar = async (userID: string) => {
+    let { data, error } = await supabase
+        .from('Calendar')
+        .select('date, mood')
+        .eq('userID', userID);
     return { data, error };
 };
 
@@ -81,9 +84,9 @@ const CalendarHistory = () => {
     const isFocused = useIsFocused();
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchData = async (userID: string) => {
             setIsLoading(true);
-            const { data, error } = await getCalendar();
+            const { data, error } = await getCalendar(userID);
             if (error) {
                 console.log(error);
                 return;
@@ -94,7 +97,11 @@ const CalendarHistory = () => {
             }
         };
 
-        fetchData();
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                fetchData(session?.user.id);
+            }
+        });
     }, [isFocused]);
 
     const renderDay = ({ date }: any) => {
