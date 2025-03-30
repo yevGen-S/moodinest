@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
 import { generalStyles } from '@/constants/theme';
+import icons from '@/constants/icons';
 
 type WeatherType = {
     latitude: number;
@@ -66,16 +67,29 @@ export const Weather = () => {
 
     return (
         <View style={styles.container}>
-            <Text
+            <View
                 style={{
-                    ...generalStyles.font,
-                    alignContent: 'flex-start',
-                    fontWeight: 500,
-                    marginBottom: 15,
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    width: '100%',
                 }}
             >
-                Погода
-            </Text>
+                <Text
+                    style={{
+                        ...generalStyles.font,
+                        alignContent: 'flex-start',
+                        fontWeight: 500,
+                        marginBottom: 15,
+                    }}
+                >
+                    Погода
+                </Text>
+                <Image
+                    source={icons.weather}
+                    style={{ width: 50, height: 50 }}
+                />
+            </View>
             <>{text}</>
         </View>
     );

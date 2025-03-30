@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Form from '@/components/Form/Form';
 import LogoWithText from '@/components/LogoWithText/LogoWithText';
