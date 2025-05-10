@@ -10,6 +10,7 @@ import bookmark from '../assets/icons/bookmark.png';
 import star from '../assets/icons/star.png';
 import avatar from '../assets/icons/avatar.png';
 import filledBookmark from '../assets/icons/filled_bookmark.png';
+import weather from '../assets/icons/weather.png';
 
 export default {
     profile,
@@ -24,4 +25,5 @@ export default {
     filledBookmark,
     star,
     avatar,
+    weather,
 };

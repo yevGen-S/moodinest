@@ -10,6 +10,7 @@ import HorizontalDivider from '@/components/HorizontalDivider/HorizontalDivider'
 import HorizontalNamedLessonsList from '@/components/HorizontalNamedLessonsList/HorizontalNamedLessonsList';
 import { useIsFocused } from '@react-navigation/native';
 import { Session } from '@supabase/supabase-js';
+import { Weather } from '@/components/Weather/Weather';
 
 const fetchFavouriteLessons = async (userId: string) => {
     const { data, error } = await supabase
@@ -110,6 +111,7 @@ const Profile = () => {
                     padding: 20,
                 }}
             >
+                <Weather />
                 <HorizontalNamedLessonsList
                     data={favouriteLessons}
                     name="Избранное"
