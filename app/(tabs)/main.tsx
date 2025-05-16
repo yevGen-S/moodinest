@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { generalStyles } from '@/constants/theme';
 import LastWeekCalendar from '@/components/LastWeekCalendar/LastWeekCalendar';
 import images from '@/constants/images';
+import icons from '@/constants/icons';
 import MoodPicker from '@/components/MoodPicker/MoodPicker';
 import CustomButton from '@/components/CustomButton/CustomButton';
 import { supabase } from '@/supabase';
@@ -145,7 +146,7 @@ const Main = () => {
             style={{
                 ...generalStyles.container,
                 alignItems: 'center',
-                gap: 25,
+                gap: 22,
             }}
         >
             <WithLoader isLoading={isLoading}>
@@ -183,6 +184,18 @@ const Main = () => {
                             })
                         }
                     />
+
+                    <CustomButton
+                        showText="Пройти опрос"
+                        style={{backgroundColor: '#D9D9D9'}}
+                        textStyle={{ color: '#000000' }}
+                        icon={icons.heart}
+                        onPress={() =>
+                            router.navigate({
+                                pathname: '../(app)/testAI/testQuestions',
+                            })
+                        }
+                    />
                 </>
             </WithLoader>
         </SafeAreaView>
@@ -197,8 +210,8 @@ const styles = StyleSheet.create({
         fontSize: 36,
     },
     image: {
-        width: 260,
-        height: 260,
+        width: 220,
+        height: 220,
         borderRadius: 1000,
         borderWidth: 2,
         borderColor: '#AFB1B6',

@@ -11,6 +11,8 @@ import star from '../assets/icons/star.png';
 import avatar from '../assets/icons/avatar.png';
 import filledBookmark from '../assets/icons/filled_bookmark.png';
 import weather from '../assets/icons/weather.png';
+import heart from '../assets/icons/heart.png';
+import arrowToLeft from '../assets/icons/arrow-to-left.png';
 
 export default {
     profile,
@@ -26,4 +28,6 @@ export default {
     star,
     avatar,
     weather,
+    heart,
+    arrowToLeft,
 };

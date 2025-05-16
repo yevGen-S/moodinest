@@ -33,6 +33,12 @@ export default function RootLayout() {
                 name="(app)/meditation-card/[id]"
                 options={{ headerTitle: '' }}
             />
+            <Stack.Screen
+                name="(app)/testAI/testQuestions"
+                options={{
+                    headerShown: false,
+                }}
+            />
         </Stack>
     );
 }
