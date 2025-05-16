@@ -12,6 +12,7 @@ type WeatherType = {
     deg: number;
     humidity: number;
     pressure: number;
+    main: string;
 };
 
 export const Weather = () => {
@@ -43,13 +44,21 @@ export const Weather = () => {
                 longitude,
                 ...whether.main,
                 ...whether.wind,
+                ...whether.weather[0],
             });
         }
 
         getCurrentLocation();
     }, []);
 
-    let text = <Text>'Загрузка...'</Text>;
+    const isGoodWeather =
+        weather &&
+        weather.main !== 'Rain' &&
+        weather.temp > 17 &&
+        weather.temp < 25 &&
+        weather.speed < 8;
+
+    let text = <Text>Загружаем...</Text>;
     if (errorMsg) {
         text = <Text>{errorMsg}</Text>;
     } else if (weather) {
@@ -57,9 +66,9 @@ export const Weather = () => {
             <View style={{ alignItems: 'flex-start' }}>
                 <Text>Широта: {weather?.latitude}</Text>
                 <Text>Долгота: {weather?.longitude}</Text>
-                <Text>Температура: {weather?.temp}</Text>
-                <Text>Скорость ветра: {weather?.speed}</Text>
-                <Text>Влажность: {weather?.humidity}</Text>
+                <Text>Температура: {Math.round(weather?.temp)} °C</Text>
+                <Text>Скорость ветра: {weather?.speed} м/с</Text>
+                <Text>Влажность: {weather?.humidity}%</Text>
                 <Text>Давление: {weather?.pressure}</Text>
             </View>
         );
@@ -86,11 +95,18 @@ export const Weather = () => {
                     Погода
                 </Text>
                 <Image
-                    source={icons.weather}
-                    style={{ width: 50, height: 50 }}
+                    source={weather?.main === 'Rain'? icons.rain
+                        : weather?.main === 'Clear'? icons.sun
+                        : icons.weather}
+                    style={{ width: 50, height: 50, marginRight: 20}}
                 />
             </View>
             <>{text}</>
+            {isGoodWeather && (
+                <Text style={styles.recommendation}>
+                    Самое время для медитации на свежем воздухе!
+                </Text>
+            )}
         </View>
     );
 };
@@ -101,5 +117,14 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
         marginBottom: 20,
+    },
+    recommendation: {
+        backgroundColor: '#f3f2ce',
+        borderRadius: 10,
+        padding: 10,
+        width: '95%',
+        marginTop: 15,
+        textAlign: 'center',
+        marginHorizontal: 'auto',
     },
 });
