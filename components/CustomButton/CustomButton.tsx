@@ -3,22 +3,33 @@ import {
     Text,
     TouchableOpacity,
     TouchableOpacityProps,
+    Image,
+    ImageSourcePropType,
 } from 'react-native';
 import React from 'react';
 import { generalStyles } from '@/constants/theme';
 
 export type CustomButtonProps = {
     showText: string;
+    textStyle?: object;
+    icon?: ImageSourcePropType;
 } & TouchableOpacityProps;
 
-const CustomButton = ({ showText, style, ...props }: CustomButtonProps) => {
+const CustomButton = ({ showText, style, textStyle, icon, ...props }: CustomButtonProps) => {
     return (
         <TouchableOpacity
             {...props}
-            style={[styles.btn, style]}
+            style={[styles.btn, style,]}
             activeOpacity={0.8}
         >
-            <Text style={styles.btnText}>{showText}</Text>
+            {icon && (
+                <Image
+                    source={icon}
+                    style={styles.iconBackground}
+                    resizeMode="contain"
+                />
+            )}
+            <Text style={[styles.btnText, textStyle]}>{showText}</Text>
         </TouchableOpacity>
     );
 };
@@ -31,13 +42,21 @@ const styles = StyleSheet.create({
         width: '90%',
         height: 48,
         borderRadius: 24,
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: 'hidden',
     },
     btnText: {
         ...generalStyles.font,
         color: '#FFFFFF',
-        width: '100%',
-        height: '100%',
         textAlign: 'center',
         textAlignVertical: 'center',
+        zIndex: 1,
+    },
+    iconBackground: {
+        position: 'absolute',
+        left: 16,
+        height: 20,
+        width: 20,
     },
 });
