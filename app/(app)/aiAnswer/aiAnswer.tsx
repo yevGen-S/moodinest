@@ -3,11 +3,13 @@ import React from 'react';
 import CustomButton from '@/components/CustomButton/CustomButton';
 import { router, useLocalSearchParams } from 'expo-router';
 
-const aiAnswer = () => {
+const AiAnswer = () => {
     const { response } = useLocalSearchParams();
     return (
-        <View style={styles.container}>
-            <Text>{response}</Text>
+        <View style={{ alignItems: 'center', padding: 12, gap: 10 }}>
+            <View style={styles.textContainer}>
+                <Text>{response}</Text>
+            </View>
             <CustomButton
                 showText={'Хочу!'}
                 onPress={() =>
@@ -29,14 +31,14 @@ const aiAnswer = () => {
     );
 };
 
-export default aiAnswer;
+export default AiAnswer;
 
 const styles = StyleSheet.create({
-    container: {
+    textContainer: {
         paddingVertical: 12,
         paddingHorizontal: 20,
         width: '100%',
-        height: '100%',
+        minHeight: '50%',
         borderRadius: 24,
         borderColor: '#000000',
         borderWidth: 1,
