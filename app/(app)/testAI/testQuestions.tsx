@@ -82,7 +82,7 @@ const QuestionScreen = () => {
                 router.navigate({
                     pathname: '../../aiAnswer/aiAnswer',
                     params: {
-                        response: 'response.choices[0]?.message.content',
+                        response: response.choices[0]?.message.content,
                     },
                 });
             } catch (err) {
