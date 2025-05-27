@@ -14,6 +14,8 @@ import questions from '@/constants/questions';
 import { generalStyles } from '@/constants/theme';
 import { router } from 'expo-router';
 import icons from '@/constants/icons';
+
+import 'react-native-get-random-values';
 import GigaChat from 'gigachat';
 
 const giga = new GigaChat({
@@ -64,25 +66,28 @@ const QuestionScreen = () => {
             console.log('Ответы:', updated);
 
             try {
-                let response = await giga.chat({
-                    messages: [
-                        {
-                            role: 'user',
-                            content: `Поблагодари за прохождение опроса, предложи рекомендацию на сегодняшний день согласно пройденному опросу, дай совет для улучшения плохого состояния или поддержания хорошего исходя из опроса, Опрос: ${JSON.stringify(
-                                updated
-                            )}`,
-                        },
-                    ],
-                });
+                let response = await giga.getModels();
 
-                console.log(response.choices[0]?.message.content);
+                console.log(response);
+                // let response = await giga.chat({
+                //     messages: [
+                //         {
+                //             role: 'user',
+                //             content: `Поблагодари за прохождение опроса, предложи рекомендацию на сегодняшний день согласно пройденному опросу, дай совет для улучшения плохого состояния или поддержания хорошего исходя из опроса, Опрос: ${JSON.stringify(
+                //                 updated
+                //             )}`,
+                //         },
+                //     ],
+                // });
 
-                router.navigate({
-                    pathname: '../../(app)/aiAnswer',
-                    params: {
-                        response: response.choices[0]?.message.content,
-                    },
-                });
+                // console.log(response.choices[0]?.message.content);
+
+                // router.navigate({
+                //     pathname: '../../(app)/aiAnswer',
+                //     params: {
+                //         response: response.choices[0]?.message.content,
+                //     },
+                // });
             } catch (err) {
                 console.log(err);
             }
