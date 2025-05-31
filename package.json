@@ -19,6 +19,7 @@
     "@react-navigation/native": "^7.0.0",
     "@rneui/themed": "^4.0.0-rc.8",
     "@supabase/supabase-js": "^2.46.1",
+    "axios": "^1.9.0",
     "dayjs": "^1.11.13",
     "expo": "^52.0.8",
     "expo-asset": "~11.0.1",
@@ -35,6 +36,7 @@
     "expo-video-thumbnails": "~9.0.2",
     "expo-web-browser": "~14.0.1",
     "gigachat": "^0.0.14",
+    "langchain-gigachat": "^0.0.11",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "0.76.2",
@@ -44,7 +46,8 @@
     "react-native-screens": "^4.0.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-vector-icons": "^10.2.0",
-    "react-native-web": "~0.19.10"
+    "react-native-web": "~0.19.10",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

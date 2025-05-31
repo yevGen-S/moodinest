@@ -1,15 +1,25 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import CustomButton from '@/components/CustomButton/CustomButton';
 import { router, useLocalSearchParams } from 'expo-router';
 
 const AiAnswer = () => {
-    const { response } = useLocalSearchParams();
+    const { test, response } = useLocalSearchParams();
+    const resObj = JSON.parse(test as string);
     return (
         <View style={{ alignItems: 'center', padding: 12, gap: 10 }}>
-            <View style={styles.textContainer}>
-                <Text>{response}</Text>
-            </View>
+            <ScrollView style={styles.textContainer}>
+                {resObj.map((q: Record<string, Object>) => {
+                    const [question, answer] = Object.entries(q)[0];
+                    return (
+                        <View key={question} style={{ paddingBottom: 5 }}>
+                            <Text>{question}</Text>
+                            <Text>{JSON.stringify(answer)}</Text>
+                        </View>
+                    );
+                })}
+                <Text style={{ marginVertical: 30 }}>{response}</Text>
+            </ScrollView>
             <CustomButton
                 showText={'Хочу!'}
                 onPress={() =>
@@ -39,6 +49,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         width: '100%',
         minHeight: '50%',
+        maxHeight: '80%',
         borderRadius: 24,
         borderColor: '#000000',
         borderWidth: 1,

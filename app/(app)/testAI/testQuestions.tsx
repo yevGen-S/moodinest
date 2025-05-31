@@ -16,14 +16,46 @@ import questions from '@/constants/questions';
 import { generalStyles } from '@/constants/theme';
 import { router } from 'expo-router';
 import icons from '@/constants/icons';
-import GigaChat from 'gigachat';
+// import GigaChat from 'gigachat';
+import { v4 as uuid } from 'uuid';
 
-const giga = new GigaChat({
-    credentials:
-        'MTJlZTdkNjUtYWNlNC00NGNjLTlmNzctNTFmOWZhZDUzY2IwOmUyNWQ1YWY2LWNlMjMtNGZhNy1hMmRlLWYwZDZmZGUyOWM1NQ==',
-    model: 'GigaChat',
-    scope: 'GIGACHAT_API_PERS',
-});
+// const giga = new GigaChat({
+//     credentials:
+//         'MTJlZTdkNjUtYWNlNC00NGNjLTlmNzctNTFmOWZhZDUzY2IwOjQ2ZjZlMGRmLTk1YWItNGEyMy05NWU5LTVkYzI1OWJhNjY5ZQ==',
+//     model: 'GigaChat',
+//     scope: 'GIGACHAT_API_PERS',
+// });
+
+const fetchData = async () => {
+    const url = 'https://ngw.devices.sberbank.ru:9443/api/v2/oauth';
+    const requestId = uuid();
+    const authorizationKey =
+        'MTJlZTdkNjUtYWNlNC00NGNjLTlmNzctNTFmOWZhZDUzY2IwOjQ2ZjZlMGRmLTk1YWItNGEyMy05NWU5LTVkYzI1OWJhNjY5ZQ==';
+
+    const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+        RqUID: requestId,
+        Authorization: `Basic ${authorizationKey}`,
+    };
+
+    const body = new URLSearchParams({
+        scope: 'GIGACHAT_API_PERS',
+    }).toString();
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: body,
+        });
+
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.error('Ошибка при выполнении запроса:', error);
+    }
+};
 
 const QuestionScreen = () => {
     const [step, setStep] = useState(0);
@@ -66,23 +98,56 @@ const QuestionScreen = () => {
             console.log('Ответы:', updated);
 
             try {
-                let response = await giga.chat({
-                    messages: [
-                        {
-                            role: 'user',
-                            content: `Поблагодари за прохождение опроса, предложи рекомендацию на сегодняшний день согласно пройденному опросу, дай совет для улучшения плохого состояния или поддержания хорошего исходя из опроса, Опрос: ${JSON.stringify(
-                                updated
-                            )}`,
-                        },
-                    ],
-                });
+                const queryContent = questions.map((q, i) => ({
+                    [q.text]: updated[i],
+                }));
+                // let response = await giga.chat({
+                //     messages: [
+                //         {
+                //             role: 'user',
+                //             content: `Поблагодари за прохождение опроса, предложи рекомендацию на сегодняшний день согласно пройденному опросу, дай совет для улучшения плохого состояния или поддержания хорошего исходя из опроса, Опрос: ${JSON.stringify(
+                //                 updated
+                //             )}`,
+                //         },
+                //     ],
+                // });
 
-                console.log(response.choices[0]?.message.content);
+                // console.log(response.choices[0]?.message.content);
+
+                // await fetchData();
+
+                // const res = await fetch(
+                //     'https://ngw.devices.sberbank.ru:9443/api/v2/oauth',
+                //     {
+                //         headers: {
+                //             'Content-Type': 'application/x-www-form-urlencoded',
+                //             Accept: 'application/json',
+                //             RqUID: '12ee7d65-ace4-44cc-9f77-51f9fad53cb0',
+                //             Authorization:
+                //                 'Basic MTJlZTdkNjUtYWNlNC00NGNjLTlmNzctNTFmOWZhZDUzY2IwOjQ2ZjZlMGRmLTk1YWItNGEyMy05NWU5LTVkYzI1OWJhNjY5ZQ==',
+                //         },
+                //         method: 'POST',
+                //         body: JSON.stringify({ scope: 'GIGACHAT_API_PERS' }),
+                //     }
+                // );
+
+                // const token = await res.json();
+
+                // console.log(token);
 
                 router.navigate({
                     pathname: '../../aiAnswer/aiAnswer',
                     params: {
-                        response: response.choices[0]?.message.content,
+                        test: JSON.stringify(queryContent), //response.choices[0]?.message.content,
+                        response: `Спасибо большое за участие в опросе!
+
+Сегодняшняя рекомендация основывается на ваших предпочтениях и потребностях. Вы отметили занятие спортом как практику, которую хотите попробовать для улучшения настроения. Отличная идея — физическая активность действительно помогает поднять настроение и зарядиться энергией.
+
+Совет: Если чувствуете себя неважно, попробуйте начать с небольшой прогулки на свежем воздухе или легкой разминки дома. Это поможет снять стресс и повысить общий тонус организма. А если у вас хорошее состояние, поддерживайте его регулярностью занятий и слушайте свое тело, увеличивая нагрузку постепенно.
+
+Помните, забота о себе важна каждый день.
+
+Хотите попробовать медитацию сейчас?`,
                     },
                 });
             } catch (err) {
