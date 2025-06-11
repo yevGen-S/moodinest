@@ -13,7 +13,7 @@ export default function RootLayout() {
                     headerShown: false,
                 }}
             />
-            <Stack.Screen   
+            <Stack.Screen
                 name="(auth)/signIn"
                 options={{
                     headerShown: false,
@@ -37,6 +37,12 @@ export default function RootLayout() {
                 name="(app)/testAI/testQuestions"
                 options={{
                     headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="(app)/aiAnswer/aiAnswer"
+                options={{
+                    headerTitle: 'MoodiNest',
                 }}
             />
         </Stack>

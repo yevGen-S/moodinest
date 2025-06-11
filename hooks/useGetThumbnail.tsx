@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import * as VideoThumbnails from 'expo-video-thumbnails';
+// import * as VideoThumbnails from 'expo-video-thumbnails';
 
 const useGetThumbnail = (videoURL?: string) => {
     const [videoThumbnail, setVideoThumbnail] = useState<string | null>(null);
@@ -9,13 +9,13 @@ const useGetThumbnail = (videoURL?: string) => {
         const createThumbnail = async () => {
             setIsLoading(true);
             try {
-                const { uri } = await VideoThumbnails.getThumbnailAsync(
-                    videoURL ?? '',
-                    {
-                        time: 2000,
-                    }
-                );
-                setVideoThumbnail(uri);
+                // const { uri } = await VideoThumbnails.getThumbnailAsync(
+                //     videoURL ?? '',
+                //     {
+                //         time: 2000,
+                //     }
+                // );
+                setVideoThumbnail('');
             } catch (error) {
                 console.error('Ошибка при создании миниатюры:', error);
             }
